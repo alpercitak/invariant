@@ -12,7 +12,7 @@ Invariant is a web archive of interactive math exhibits for curious readers, inc
 
 ## Build and release
 
-Use Astro to build a static archive index and individual exhibit pages with a shared layout. Use Markdown for exhibit copy, TypeScript for the models, and native browser controls and rendering. Use Bun for dependencies and model tests, Biome for code checks, and Playwright for the core exhibit interactions. Cloudflare Pages is the deployment target.
+Use Astro to build a static archive index and individual exhibit pages with a shared layout. Use Markdown for exhibit copy, TypeScript for the models and browser code, and native browser controls and rendering. Use Bun for dependencies and model tests, Biome for code checks, and Playwright for the core exhibit interactions. Cloudflare Pages is the deployment target.
 
 1. Set up the site and the exhibit template. Build Kuramoto synchronization first so the archive has one complete example with working controls, a readable explanation, and model tests.
 2. Add the Lorenz attractor and launch with both exhibits. Check reproducible reset, keyboard controls, paused and reduced-motion states, and a mobile layout before publishing.

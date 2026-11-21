@@ -20,6 +20,8 @@ bun run dev
 
 Run `bun run check` for formatting, linting, type checking, and model tests. Run `bun run build` to generate the static site in `dist/`.
 
+Each exhibit keeps its browser controls and rendering in `src/exhibits/<slug>/experiment.ts` and its math in `model.ts`. Astro compiles the TypeScript into JavaScript for the browser.
+
 Run the browser tests against the static build with Playwright.
 
 ```sh

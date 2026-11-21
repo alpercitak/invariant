@@ -10,7 +10,7 @@ Invariant is a single Astro site for interactive math exhibits. Write for curiou
 ## Site Layout
 
 - Keep routes in `src/pages/`, shared layouts in `src/layouts/`, and interactive exhibit code in `src/exhibits/<slug>/`. Keep exhibit copy in Markdown and use the shared exhibit layout.
-- Keep the mathematical model independent of DOM and rendering code so it can be checked with Bun tests. Keep each exhibit's parameters and presets with the exhibit.
+- Keep browser behavior in each exhibit's `experiment.ts` and the mathematical model in `model.ts`. Keep the model independent of DOM and rendering code so it can be checked with Bun tests. Keep parameters and presets with the exhibit.
 - Build pages as static HTML and load browser code where an exhibit needs it. Prefer native HTML controls, Canvas 2D for simulations, SVG for geometry, and MathML for equations.
 
 ## Exhibits
