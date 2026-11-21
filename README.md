@@ -33,4 +33,8 @@ bun run test:browser
 
 Use `main` as the production branch, `bun run build` as the build command, and `dist` as the build output directory. Set `NODE_VERSION` to `22.16.0` and `BUN_VERSION` to `1.4.2` for the same toolchain used locally. [Cloudflare Pages Astro guide](https://developers.cloudflare.com/pages/framework-guides/deploy-an-astro-site/)
 
+## Project notes
+
+Instrument Serif is used for titles and Geist for body text and controls. The site serves both fonts and their license notices from `public/fonts/`. [Instrument Serif](https://github.com/Instrument/instrument-serif) · [Geist](https://github.com/vercel/geist-font)
+
 See the [exhibit roadmap](docs/PLAN.md) and [TODO](docs/TODO.md) for project status.

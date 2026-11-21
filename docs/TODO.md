@@ -10,6 +10,7 @@ The [project plan](PLAN.md) tracks the full exhibit roadmap.
 - [x] Build the Lorenz exhibit with a resettable trajectory comparison, a plain-language explanation, and a short-interval step-size check.
 - [x] Run browser checks for keyboard controls, pause and reset, reduced motion, and the mobile layout.
 - [x] Move exhibit browser behavior and Astro configuration into TypeScript files.
+- [x] Apply self-hosted Instrument Serif and Geist and check typography on desktop and mobile.
 - [ ] Deploy to Cloudflare Pages and verify the archive and exhibit URLs.
 
 ## Geometry
