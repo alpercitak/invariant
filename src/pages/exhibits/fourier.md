@@ -2,8 +2,8 @@
 layout: ../../layouts/Exhibit.astro
 title: Fourier drawing
 description: Add rotating circles and watch their combined motion trace a paper plane.
-category: Waves and signals
 question: How can rotating circles draw a shape?
+guide: Start with one circle, then add more. Watch the gold curve bring out the plane’s nose and notch as it approaches the dashed outline.
 ---
 
 ## What to look for

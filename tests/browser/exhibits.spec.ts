@@ -15,6 +15,11 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     await expect(page.getByRole('heading', { name, level: 1 })).toBeVisible();
     await expect(page.locator('math[display="block"]')).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(360);
+    const guide = page.locator('details').filter({ hasText: 'How to read this' });
+    await expect(guide.locator('p')).toBeHidden();
+    await guide.locator('summary').press('Enter');
+    await expect(guide.locator('p')).toBeVisible();
+    await expect(guide.locator('p')).not.toBeEmpty();
     await page.getByRole('link', { name: 'All exhibits' }).click();
   }
 });

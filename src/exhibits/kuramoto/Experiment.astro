@@ -1,41 +1,24 @@
-<section class="experiment" aria-labelledby="experiment-title">
-	<div class="heading">
-		<div><p class="eyebrow">A population of 64 oscillators</p><h2 id="experiment-title">Can a crowd find a shared beat?</h2></div>
-		<p class="readout">Synchrony <output id="synchrony" aria-live="off">—</output></p>
-	</div>
-	<div class="visual">
-		<canvas id="oscillators" role="img" aria-label="Animated phases of 64 oscillators arranged around a circle. Their changing positions show how aligned their rhythms are."></canvas>
-		<p id="explanation" class="explanation">Each dot is an oscillator. Its position around the ring is its phase; the bright marker shows the population’s average phase.</p>
-	</div>
-	<div class="controls">
-		<label for="coupling">Coupling <output id="coupling-value">1.2</output></label>
-		<input id="coupling" type="range" min="0" max="5" step="0.1" value="1.2" />
-		<div class="buttons"><button id="play" type="button">Pause</button><button id="reset" type="button">Reset</button></div>
-	</div>
-	<p class="hint">Try raising coupling slowly. Does the crowd settle into one rhythm, or do some dots keep circling alone?</p>
+<section class="scene-panel" aria-label="Kuramoto simulation">
+  <canvas
+    id="oscillators"
+    class="scene-view"
+    role="img"
+    aria-label="Phases of 64 oscillators around a circle. The amber arrow shows the mean phase and how closely the phases align."
+  ></canvas>
+  <div class="scene-toolbar">
+    <div class="scene-controls">
+      <label for="coupling">Coupling</label>
+      <div class="scene-range">
+        <input id="coupling" type="range" min="0" max="5" step="0.1" value="1.2" />
+        <output id="coupling-value" for="coupling" aria-live="off">1.2</output>
+      </div>
+      <div class="scene-actions">
+        <button id="play" type="button">Pause</button>
+        <button id="reset" type="button">Reset</button>
+      </div>
+    </div>
+    <p class="scene-readout">Synchrony <output id="synchrony" aria-live="off">—</output></p>
+  </div>
 </section>
 
 <script src="./experiment.ts"></script>
-
-<style>
-	.experiment { background: var(--panel); border: 1px solid var(--line); border-radius: 1rem; padding: clamp(1rem, 4vw, 2rem); color: var(--ink); }
-	.heading { display:flex; justify-content:space-between; gap:1rem; align-items:end; }
-	.eyebrow { color:var(--secondary); font: .75rem var(--mono); letter-spacing:.08em; text-transform:uppercase; margin:0 0 .4rem; }
-	h2 { font-size:clamp(1.25rem, 4vw, 1.8rem); margin:0; }
-	.readout { color:var(--muted); margin:0; white-space:nowrap; font: .8rem var(--mono); }
-	.readout output { color:var(--accent); display:block; text-align:right; font-size:1rem; margin-top:.25rem; }
-	.visual { margin:1rem auto; max-width:40rem; }
-	canvas { display:block; width:100%; height:min(62vw, 22rem); min-height:14rem; }
-	.explanation,.hint { color:var(--muted); font-size:.9rem; line-height:1.55; }
-	.explanation { text-align:center; margin:.25rem 0 0; }
-	.controls { display:grid; grid-template-columns:auto minmax(6rem,1fr) auto; align-items:center; gap:.7rem 1rem; }
-	.controls label { font-weight:600; }
-	.controls label output { color:var(--accent); font: .85rem var(--mono); margin-left:.3rem; }
-	input[type="range"] { accent-color:var(--accent); width:100%; }
-	.buttons { display:flex; gap:.5rem; }
-	button { border:1px solid var(--line); border-radius:999px; background:var(--paper); color:var(--ink); padding:.55rem 1rem; font:inherit; cursor:pointer; }
-	button:hover { border-color:var(--accent); }
-	button:focus-visible,input:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
-	.hint { margin:.8rem 0 0; }
-	@media(max-width:600px) { .heading { align-items:start; flex-direction:column; } .readout output { display:inline; margin-left:.25rem; } .controls { grid-template-columns:1fr auto; } .controls label { grid-column:1 / -1; } .controls input { grid-column:1 / -1; grid-row:2; } }
-</style>

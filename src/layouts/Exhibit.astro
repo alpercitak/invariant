@@ -6,11 +6,11 @@ import Base from './Base.astro';
 type Props = MarkdownLayoutProps<{
   title: string;
   description: string;
-  category: string;
   question: string;
+  guide: string;
 }>;
 
-const { title, description, category, question } = Astro.props.frontmatter;
+const { title, description, question, guide } = Astro.props.frontmatter;
 const slug = Astro.url.pathname.split('/').filter(Boolean).at(-1);
 const experiments = import.meta.glob<AstroComponentFactory>('../exhibits/*/Experiment.astro', {
   eager: true,
@@ -23,11 +23,14 @@ const Experiment = experiments[`../exhibits/${slug}/Experiment.astro`];
   <article class="exhibit">
     <header class="exhibit-heading">
       <a class="back" href="/#exhibits">← All exhibits</a>
-      <p class="category">{category}</p>
       <h1>{title}</h1>
       <p class="question">{question}</p>
     </header>
     {Experiment && <Experiment />}
+    <details class="guide">
+      <summary>How to read this</summary>
+      <p>{guide}</p>
+    </details>
     <div class="notes">
       <slot />
     </div>
@@ -36,16 +39,16 @@ const Experiment = experiments[`../exhibits/${slug}/Experiment.astro`];
 
 <style>
   .exhibit {
-    padding: 2rem 0 4rem;
+    padding: clamp(1rem, 2.4vw, 1.85rem) 0 4rem;
   }
 
   .exhibit-heading {
-    margin-bottom: 2rem;
+    margin-bottom: 1.25rem;
   }
 
   .back {
     display: inline-flex;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1rem;
     color: var(--muted);
     font-size: 0.9rem;
     text-decoration: none;
@@ -56,20 +59,40 @@ const Experiment = experiments[`../exhibits/${slug}/Experiment.astro`];
   }
 
   .exhibit h1 {
-    max-width: 18ch;
-    font-size: clamp(2.75rem, 7vw, 6rem);
+    font-size: clamp(2.65rem, 6vw, 4.6rem);
   }
 
   .question {
     max-width: 42ch;
-    margin-bottom: 0;
+    margin: 0.4rem 0 0;
     color: var(--muted);
-    font-size: clamp(1.15rem, 2.25vw, 1.55rem);
+    font-size: clamp(1rem, 1.85vw, 1.3rem);
+  }
+
+  .guide {
+    margin-top: 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 0.35rem;
+    background: var(--panel);
+  }
+
+  .guide summary {
+    padding: 0.65rem 1rem;
+    color: var(--accent);
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .guide p {
+    max-width: 72ch;
+    margin: 0;
+    padding: 0 1rem 0.85rem;
+    color: var(--muted);
   }
 
   .notes {
     max-width: 68ch;
-    margin: 3.5rem auto 0;
+    margin: 2.65rem auto 0;
     color: var(--muted);
     font-size: 1.075rem;
   }

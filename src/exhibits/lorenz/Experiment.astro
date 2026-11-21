@@ -1,39 +1,34 @@
----
----
-
-<section class="experiment" aria-labelledby="experiment-title">
-  <h2 id="experiment-title" class="sr-only">Two nearby Lorenz trajectories</h2>
-  <div class="controls">
-    <label for="separation">Initial separation <output id="separation-value">0.10</output></label>
-    <input id="separation" type="range" min="0.01" max="1" step="0.01" value="0.1" />
-    <button id="toggle" type="button">Pause</button>
-    <button id="reset" type="button">Reset</button>
-  </div>
-  <ul class="legend" aria-label="Trajectories">
-    <li><span class="baseline" aria-hidden="true"></span>Baseline</li>
+<section class="scene-panel" aria-label="Lorenz trajectory comparison">
+  <canvas
+    id="plot"
+    class="scene-view"
+    role="img"
+    aria-label="Two Lorenz trajectories viewed in the x-z plane. The solid path starts at (1, 1, 1), and the dashed path starts nearby."
+  ></canvas>
+  <ul class="scene-legend" aria-label="Trajectories">
+    <li><span aria-hidden="true"></span>Baseline</li>
     <li><span class="shifted" aria-hidden="true"></span>Shifted start</li>
   </ul>
-  <canvas id="plot" role="img" aria-label="Two Lorenz trajectories viewed in the x-z plane. Amber begins at (1, 1, 1); teal begins nearby. Their paths separate over time."></canvas>
-  <p id="readout" class="readout">Time 0.00 · separation 0.10</p>
+  <div class="scene-toolbar">
+    <div class="scene-controls">
+      <label for="separation">Initial separation</label>
+      <div class="scene-range">
+        <input id="separation" type="range" min="0.01" max="1" step="0.01" value="0.1" />
+        <output id="separation-value" for="separation" aria-live="off">0.10</output>
+      </div>
+      <div class="scene-actions">
+        <button id="toggle" type="button">Pause</button>
+        <button id="reset" type="button">Reset</button>
+      </div>
+    </div>
+    <p id="readout" class="scene-readout">Time 0.00 · separation 0.10</p>
+  </div>
 </section>
 
 <script src="./experiment.ts"></script>
 
 <style>
-  .experiment { background: var(--panel); border: 1px solid var(--line); border-radius: 1rem; padding: clamp(1rem, 3vw, 1.5rem); }
-  .controls { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }
-  label { color: var(--ink); font-weight: 650; }
-  output { color: var(--muted); font: .9rem var(--mono); margin-left: .4rem; }
-  input[type="range"] { accent-color: var(--accent); flex: 1 1 12rem; min-width: 9rem; }
-  button { background: var(--paper); border: 1px solid var(--line); border-radius: .5rem; color: var(--ink); cursor: pointer; font: inherit; font-weight: 650; padding: .55rem .85rem; }
-  button:hover { border-color: var(--accent); }
-  :focus-visible { outline: 3px solid var(--secondary); outline-offset: 3px; }
-  canvas { display: block; width: 100%; height: clamp(260px, 48vw, 430px); margin-top: 1rem; }
-  .legend { display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; padding: 0; margin: 1rem 0 0; list-style: none; color: var(--muted); font: .8rem var(--mono); }
-  .legend li { display: flex; align-items: center; gap: .5rem; }
-  .legend span { display: inline-block; width: 1.5rem; border-top: 2px solid var(--accent); }
-  .legend .shifted { border-top: 2px dashed var(--secondary); }
-  .readout { color: var(--muted); font: .9rem var(--mono); margin: .75rem 0 0; }
-  .sr-only { clip: rect(0,0,0,0); clip-path: inset(50%); height: 1px; overflow: hidden; position: absolute; white-space: nowrap; width: 1px; }
-  @media (max-width: 520px) { .controls { gap: .65rem; } button { flex: 1; } }
+  .scene-legend .shifted {
+    border-top: 2px dashed var(--secondary);
+  }
 </style>

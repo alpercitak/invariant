@@ -3,164 +3,45 @@ import { SAMPLE_COUNT } from './model';
 import { DEFAULT_CIRCLES } from './outline';
 ---
 
-<section class="experiment" aria-labelledby="fourier-title">
-  <div class="experiment-header">
-    <div>
-      <h2 id="fourier-title">Draw a paper plane</h2>
-      <p id="fourier-hint">Try one circle, then add more and watch the tip and folds come into focus.</p>
-    </div>
-    <p class="readout">RMS sample error <output id="fourier-error" aria-label="RMS sample error">—</output></p>
-  </div>
-  <div class="controls">
-    <label for="fourier-count">Rotating circles</label>
-    <div class="range">
-      <input id="fourier-count" type="range" min="0" max={SAMPLE_COUNT - 1} value={DEFAULT_CIRCLES} aria-describedby="fourier-hint" />
-      <output id="fourier-count-value" for="fourier-count" aria-live="off">{DEFAULT_CIRCLES}</output>
-    </div>
-    <div class="buttons">
-      <button id="fourier-play" type="button">Play</button>
-      <button id="fourier-restart" type="button">Restart trace</button>
-    </div>
-  </div>
-  <canvas id="fourier-plot" role="img" aria-label="Rotating circles whose combined motion traces a paper-plane outline" aria-describedby="fourier-legend">
+<section class="scene-panel" aria-label="Fourier drawing experiment">
+  <canvas
+    id="fourier-plot"
+    class="scene-view"
+    role="img"
+    aria-label="Rotating circles whose combined motion traces a paper-plane outline"
+    aria-describedby="fourier-legend"
+  >
     Rotating arrows are joined tip to tail. The end of the last arrow follows the reconstructed outline.
   </canvas>
-  <ul id="fourier-legend" class="legend" aria-label="Plot legend">
+  <ul id="fourier-legend" class="scene-legend" aria-label="Plot legend">
     <li><span class="reference" aria-hidden="true"></span>Original outline</li>
-    <li><span class="reconstruction" aria-hidden="true"></span>Reconstruction</li>
+    <li><span aria-hidden="true"></span>Reconstruction</li>
     <li><span class="circles" aria-hidden="true"></span>Rotating circles</li>
   </ul>
+  <div class="scene-toolbar">
+    <div class="scene-controls">
+      <label for="fourier-count">Rotating circles</label>
+      <div class="scene-range">
+        <input id="fourier-count" type="range" min="0" max={SAMPLE_COUNT - 1} value={DEFAULT_CIRCLES} />
+        <output id="fourier-count-value" for="fourier-count" aria-live="off">{DEFAULT_CIRCLES}</output>
+      </div>
+      <div class="scene-actions">
+        <button id="fourier-play" type="button">Play</button>
+        <button id="fourier-restart" type="button">Restart trace</button>
+      </div>
+    </div>
+    <p class="scene-readout">RMS sample error <output id="fourier-error" aria-label="RMS sample error">—</output></p>
+  </div>
 </section>
 
 <script src="./experiment.ts"></script>
 
 <style>
-  .experiment {
-    padding: clamp(1rem, 3vw, 2rem);
-    border: 1px solid var(--line);
-    border-radius: 0.4rem;
-    background: var(--panel);
-  }
-
-  .experiment-header {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: end;
-    gap: 0.75rem 2rem;
-    margin-bottom: 1.1rem;
-  }
-
-  h2 {
-    font-size: clamp(1.55rem, 3vw, 2.35rem);
-  }
-
-  .experiment-header p {
-    margin: 0.4rem 0 0;
-    color: var(--muted);
-  }
-
-  .readout {
-    font: 0.8rem var(--mono);
-  }
-
-  .readout output {
-    display: inline-block;
-    min-width: 6ch;
-    margin-left: 0.35rem;
-    color: var(--accent);
-  }
-
-  canvas {
-    display: block;
-    width: 100%;
-    height: clamp(220px, 59vw, 440px);
-    border-radius: 0.2rem;
-    background: var(--paper);
-  }
-
-  .legend,
-  .buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.55rem 1.2rem;
-  }
-
-  .legend {
-    padding: 0;
-    margin: 0.9rem 0 0;
-    list-style: none;
-    color: var(--muted);
-    font: 0.8rem var(--mono);
-  }
-
-  .legend li {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .legend span {
-    width: 1.2rem;
-    border-top: 2px solid var(--accent);
-  }
-
-  .legend .reference {
+  .scene-legend .reference {
     border-top: 2px dashed var(--muted);
   }
 
-  .legend .circles {
+  .scene-legend .circles {
     border-color: var(--secondary);
-  }
-
-  .controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.65rem 1rem;
-    align-items: center;
-    margin-bottom: 1.1rem;
-  }
-
-  label {
-    font-weight: 650;
-  }
-
-  .range {
-    display: flex;
-    align-items: center;
-    flex: 1 1 11rem;
-    gap: 0.65rem;
-  }
-
-  input {
-    flex: 1;
-    width: 100%;
-    min-width: 5rem;
-    accent-color: var(--accent);
-  }
-
-  .range output {
-    min-width: 3ch;
-    color: var(--accent);
-    font: 0.875rem var(--mono);
-  }
-
-  button {
-    padding: 0.55rem 0.85rem;
-    border: 1px solid var(--line);
-    border-radius: 0.25rem;
-    background: var(--paper);
-    color: var(--ink);
-    cursor: pointer;
-  }
-
-  button:hover {
-    border-color: var(--accent);
-  }
-
-  @media (width <= 480px) {
-    .buttons {
-      flex: 1 1 100%;
-    }
   }
 </style>

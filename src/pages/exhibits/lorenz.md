@@ -2,8 +2,8 @@
 layout: ../../layouts/Exhibit.astro
 title: Lorenz attractor
 description: Watch two nearby Lorenz trajectories drift apart.
-category: Chaos
 question: How far apart can two nearly identical futures become?
+guide: Set initial separation near its minimum. If the scene is paused, press Play. Watch when the solid and dashed paths stop following each other.
 ---
 
 Begin with two points almost on top of each other. Their paths initially track each other, then wander apart. How does changing the initial separation affect the time it takes for the paths to look different?

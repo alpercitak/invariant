@@ -2,8 +2,8 @@
 layout: ../../layouts/Exhibit.astro
 title: Voronoi diagrams
 description: Move warehouses and watch their nearest-neighbor regions change.
-category: Geometry
 question: How can distance divide a map?
+guide: Move a numbered warehouse and watch its patch grow or shrink. You can drag a point or focus it and use the arrow keys. Hold Shift for larger steps.
 ---
 
 Imagine choosing which warehouse delivers to each address in a town. If every truck travels in a straight line across a flat map, each address belongs to the warehouse closest to it. The map above draws that rule: move a numbered warehouse and watch its patch expand or shrink.

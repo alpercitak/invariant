@@ -2,8 +2,8 @@
 layout: ../../layouts/Exhibit.astro
 title: Kuramoto synchronization
 description: Explore how a crowd of oscillators can find a shared beat.
-category: Dynamics
 question: Can rhythms synchronize?
+guide: Raise coupling. If the scene is paused, press Play. Watch the dots form a cluster and the mean arrow grow as they line up.
 ---
 
 ## One shared pull
