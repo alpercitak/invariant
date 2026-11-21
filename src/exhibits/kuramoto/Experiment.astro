@@ -1,0 +1,145 @@
+<section class="experiment" aria-labelledby="experiment-title">
+	<div class="heading">
+		<div><p class="eyebrow">A population of 64 oscillators</p><h2 id="experiment-title">Can a crowd find a shared beat?</h2></div>
+		<p class="readout">Synchrony <output id="synchrony" aria-live="off">—</output></p>
+	</div>
+	<div class="visual">
+		<canvas id="oscillators" role="img" aria-label="Animated phases of 64 oscillators arranged around a circle. Their changing positions show how aligned their rhythms are."></canvas>
+		<p id="explanation" class="explanation">Each dot is an oscillator. Its position around the ring is its phase; the bright marker shows the population’s average phase.</p>
+	</div>
+	<div class="controls">
+		<label for="coupling">Coupling <output id="coupling-value">1.2</output></label>
+		<input id="coupling" type="range" min="0" max="5" step="0.1" value="1.2" />
+		<div class="buttons"><button id="play" type="button">Pause</button><button id="reset" type="button">Reset</button></div>
+	</div>
+	<p class="hint">Try raising coupling slowly. Does the crowd settle into one rhythm, or do some dots keep circling alone?</p>
+</section>
+
+<script>
+	import { createState, type OscillatorState, orderParameter, STEP, step } from "./model";
+
+	function required<T extends Element>(selector: string): T {
+		const element = document.querySelector<T>(selector);
+		if (!element) throw new Error(`Missing experiment element: ${selector}`);
+		return element;
+	}
+	const canvas = required<HTMLCanvasElement>("#oscillators");
+	function getContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
+		const drawingContext = canvas.getContext("2d");
+		if (!drawingContext) throw new Error("Canvas 2D is unavailable in this browser.");
+		return drawingContext;
+	}
+	const context = getContext(canvas);
+	const coupling = required<HTMLInputElement>("#coupling");
+	const couplingValue = required<HTMLOutputElement>("#coupling-value");
+	const synchrony = required<HTMLOutputElement>("#synchrony");
+	const play = required<HTMLButtonElement>("#play");
+	const reset = required<HTMLButtonElement>("#reset");
+	const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+	let state: OscillatorState = createState();
+	let paused = reducedMotion.matches;
+	let frame = 0;
+	let animationActive = false;
+	let resumeAfterPageShow = false;
+	let previous = 0;
+	let accumulator = 0;
+
+	function draw() {
+		const bounds = canvas.getBoundingClientRect();
+		const ratio = window.devicePixelRatio || 1;
+		if (canvas.width !== Math.round(bounds.width * ratio) || canvas.height !== Math.round(bounds.height * ratio)) {
+			canvas.width = Math.round(bounds.width * ratio);
+			canvas.height = Math.round(bounds.height * ratio);
+		}
+		context.setTransform(ratio, 0, 0, ratio, 0, 0);
+		context.clearRect(0, 0, bounds.width, bounds.height);
+		const cx = bounds.width / 2;
+		const cy = bounds.height / 2;
+		const radius = Math.min(bounds.width, bounds.height) * 0.34;
+		context.strokeStyle = "rgba(232, 220, 201, 0.18)";
+		context.lineWidth = 1;
+		context.beginPath(); context.arc(cx, cy, radius, 0, Math.PI * 2); context.stroke();
+		for (const phase of state.phases) {
+			const x = cx + radius * Math.cos(phase);
+			const y = cy + radius * Math.sin(phase);
+			context.fillStyle = "#67c5b2";
+			context.beginPath(); context.arc(x, y, 3.2, 0, Math.PI * 2); context.fill();
+		}
+		const { coherence, meanPhase } = orderParameter(state.phases);
+		context.strokeStyle = "#f2b84b";
+		context.lineWidth = 2;
+		context.beginPath(); context.moveTo(cx, cy); context.lineTo(cx + radius * coherence * Math.cos(meanPhase), cy + radius * coherence * Math.sin(meanPhase)); context.stroke();
+		context.fillStyle = "#f2b84b";
+		context.beginPath(); context.arc(cx + radius * coherence * Math.cos(meanPhase), cy + radius * coherence * Math.sin(meanPhase), 5, 0, Math.PI * 2); context.fill();
+		synchrony.value = `${Math.round(coherence * 100)}% · ${coherence < 0.25 ? "scattered" : coherence < 0.65 ? "partly aligned" : "mostly together"}`;
+	}
+
+	function animate(now: number) {
+		if (!animationActive) return;
+		if (!paused) {
+			accumulator += Math.min((now - previous) / 1000, 0.1);
+			while (accumulator >= STEP) { state = step(state, Number(coupling.value)); accumulator -= STEP; }
+		}
+		previous = now;
+		draw();
+		frame = requestAnimationFrame(animate);
+	}
+	function start() {
+		if (paused || animationActive) return;
+		animationActive = true;
+		previous = 0;
+		frame = requestAnimationFrame(animate);
+	}
+	function stop() {
+		animationActive = false;
+		cancelAnimationFrame(frame);
+	}
+	coupling.addEventListener("input", () => { couplingValue.value = Number(coupling.value).toFixed(1); });
+	play.addEventListener("click", () => {
+		paused = !paused;
+		play.textContent = paused ? "Play" : "Pause";
+		if (paused) stop(); else start();
+	});
+	reset.addEventListener("click", () => { state = createState(); accumulator = 0; draw(); });
+	window.addEventListener("resize", draw);
+	reducedMotion.addEventListener("change", () => {
+		if (!reducedMotion.matches) return;
+		paused = true;
+		play.textContent = "Play";
+		stop();
+	});
+	if (reducedMotion.matches) play.textContent = "Play";
+	draw();
+	start();
+	window.addEventListener("pagehide", () => {
+		resumeAfterPageShow = !paused;
+		stop();
+	});
+	window.addEventListener("pageshow", () => {
+		if (resumeAfterPageShow && !paused) start();
+		resumeAfterPageShow = false;
+	});
+</script>
+
+<style>
+	.experiment { background: var(--panel); border: 1px solid var(--line); border-radius: 1rem; padding: clamp(1rem, 4vw, 2rem); color: var(--ink); }
+	.heading { display:flex; justify-content:space-between; gap:1rem; align-items:end; }
+	.eyebrow { color:var(--secondary); font: .75rem var(--mono); letter-spacing:.08em; text-transform:uppercase; margin:0 0 .4rem; }
+	h2 { font-size:clamp(1.25rem, 4vw, 1.8rem); margin:0; }
+	.readout { color:var(--muted); margin:0; white-space:nowrap; font: .8rem var(--mono); }
+	.readout output { color:var(--accent); display:block; text-align:right; font-size:1rem; margin-top:.25rem; }
+	.visual { margin:1rem auto; max-width:40rem; }
+	canvas { display:block; width:100%; height:min(62vw, 22rem); min-height:14rem; }
+	.explanation,.hint { color:var(--muted); font-size:.9rem; line-height:1.55; }
+	.explanation { text-align:center; margin:.25rem 0 0; }
+	.controls { display:grid; grid-template-columns:auto minmax(6rem,1fr) auto; align-items:center; gap:.7rem 1rem; }
+	.controls label { font-weight:600; }
+	.controls label output { color:var(--accent); font: .85rem var(--mono); margin-left:.3rem; }
+	input[type="range"] { accent-color:var(--accent); width:100%; }
+	.buttons { display:flex; gap:.5rem; }
+	button { border:1px solid var(--line); border-radius:999px; background:var(--paper); color:var(--ink); padding:.55rem 1rem; font:inherit; cursor:pointer; }
+	button:hover { border-color:var(--accent); }
+	button:focus-visible,input:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+	.hint { margin:.8rem 0 0; }
+	@media(max-width:600px) { .heading { align-items:start; flex-direction:column; } .readout output { display:inline; margin-left:.25rem; } .controls { grid-template-columns:1fr auto; } .controls label { grid-column:1 / -1; } .controls input { grid-column:1 / -1; grid-row:2; } }
+</style>
