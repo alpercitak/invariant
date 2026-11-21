@@ -5,10 +5,13 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
   await page.goto('/');
   await page.keyboard.press('Tab');
   await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused();
-  await expect(page.getByRole('heading', { name: 'See math take shape.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'The Pattern Archive', level: 1 })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(360);
 
   for (const name of ['Kuramoto synchronization', 'Lorenz attractor', 'Voronoi diagrams', 'Fourier drawing']) {
-    await page.getByRole('link', { name: new RegExp(name) }).click();
+    const card = page.getByRole('link', { name, exact: true });
+    await expect(card.locator('svg')).toBeVisible();
+    await card.click();
     await expect(page.getByRole('heading', { name, level: 1 })).toBeVisible();
     await expect(page.locator('math[display="block"]')).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(360);

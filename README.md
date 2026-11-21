@@ -1,6 +1,6 @@
 # Invariant
 
-Invariant is an interactive archive of mathematical patterns. Each exhibit starts with a question and gives you a small experiment to explore it.
+Invariant is an interactive archive of mathematical patterns. Pick a scene from the gallery to open its experiment. Each preview is generated from the exhibit's mathematical model.
 
 ## Exhibits
 

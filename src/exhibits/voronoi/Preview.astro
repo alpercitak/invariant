@@ -1,0 +1,18 @@
+---
+import { type Point, voronoiCells } from './model';
+
+const sites: Point[] = [
+  { x: 72, y: 55 }, { x: 177, y: 35 }, { x: 300, y: 58 }, { x: 401, y: 34 },
+  { x: 45, y: 144 }, { x: 142, y: 126 }, { x: 265, y: 151 }, { x: 365, y: 122 }, { x: 425, y: 169 },
+  { x: 91, y: 211 }, { x: 213, y: 207 }, { x: 331, y: 218 },
+];
+const cells = voronoiCells(sites, { width: 470, height: 230 });
+const fills = ['#27433f', '#283d49', '#51402f', '#344449', '#3c343c', '#294b47', '#4b3b31', '#303f48', '#454033', '#2c4544', '#3b3948', '#4a3a35'];
+---
+
+<svg viewBox="0 0 560 320" aria-hidden="true" focusable="false">
+  <g transform="translate(45 20)">
+    {cells.map((cell, index) => <polygon points={cell.map(({ x, y }) => `${x},${y}`).join(' ')} fill={fills[index]} fill-opacity="0.74" stroke="#a8aaa0" stroke-opacity="0.58" stroke-width="1.15" stroke-linejoin="round" />)}
+    {sites.map(({ x, y }) => <g><circle cx={x} cy={y} r="5" fill="#f0bd74" /><circle cx={x} cy={y} r="2" fill="#18211f" /></g>)}
+  </g>
+</svg>

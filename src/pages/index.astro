@@ -1,12 +1,16 @@
 ---
-import ArchiveFigure from '@/components/ArchiveFigure.astro';
+import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 import Base from '@/layouts/Base.astro';
 
 interface Entry {
   url: string;
-  frontmatter: { title: string; description: string; category: string };
+  frontmatter: { title: string };
 }
 
+const previews = import.meta.glob<AstroComponentFactory>('../exhibits/*/Preview.astro', {
+  eager: true,
+  import: 'default',
+});
 const entries = Object.entries(import.meta.glob<Entry>('./exhibits/*.md', { eager: true })).map(([path, page]) => ({
   ...page,
   slug: path.split('/').at(-1)?.replace(/\.md$/, '') ?? '',
@@ -15,198 +19,124 @@ const order = new Map(['kuramoto', 'lorenz', 'voronoi', 'fourier'].map((slug, in
 const exhibits = entries.sort((a, b) => (order.get(a.slug) ?? order.size) - (order.get(b.slug) ?? order.size));
 ---
 
-<Base description="An interactive archive of mathematical patterns. Explore how simple rules create synchrony, chaos, and geometry.">
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="hero-copy">
-      <p class="category">The Pattern Archive</p>
-      <h1 id="hero-title">See math<br />take shape<span>.</span></h1>
-      <p class="intro">What happens when a crowd falls into sync, two paths drift apart, or distance divides a map? Change a parameter and see what follows.</p>
-      <a class="primary" href="#exhibits">Explore the exhibits <span aria-hidden="true">↓</span></a>
-    </div>
-    <figure class="hero-figure">
-      <ArchiveFigure kind="kuramoto" />
-      <figcaption><span>Coupled oscillators</span><span>Phase and mean direction</span></figcaption>
-    </figure>
-  </section>
+<Base description="An interactive archive of mathematical patterns. Explore synchrony, chaos, geometry, and waves one scene at a time.">
   <section id="exhibits" class="archive" aria-labelledby="archive-title">
-    <h2 id="archive-title">Exhibits</h2>
-    {exhibits.length ? (
-      <ul class="gallery">
-        {exhibits.map(({ url, frontmatter, slug }) => (
+    <h1 id="archive-title">The Pattern Archive</h1>
+    <ul class="gallery">
+      {exhibits.map(({ url, frontmatter, slug }) => {
+        const Preview = previews[`../exhibits/${slug}/Preview.astro`];
+        return (
           <li>
-            <a class="card" href={url}>
-              <div class="thumbnail"><ArchiveFigure kind={slug} /></div>
-              <div class="card-copy">
-                <p class="category">{frontmatter.category}</p>
-                <h3>{frontmatter.title}</h3>
-                <p class="card-summary">{frontmatter.description}</p>
-                <span class="card-action" aria-hidden="true">Open exhibit <span>↗</span></span>
+            <a class="card" href={url} data-exhibit={slug}>
+              {Preview && <Preview />}
+              <div class="card-label">
+                <h2>{frontmatter.title}</h2>
+                <span aria-hidden="true">→</span>
               </div>
             </a>
           </li>
-        ))}
-      </ul>
-    ) : (
-      <p class="empty">The first exhibits are in preparation.</p>
-    )}
+        );
+      })}
+    </ul>
   </section>
 </Base>
 
 <style>
-  .hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-    align-items: center;
-    gap: clamp(1.5rem, 5vw, 4.5rem);
-    padding: clamp(3rem, 8vw, 7.25rem) 0;
-  }
-
-  .hero h1 {
-    font-size: clamp(3.5rem, 7.25vw, 7.4rem);
-    line-height: 0.9;
-  }
-
-  .hero h1 span {
-    color: var(--accent);
-  }
-
-  .intro {
-    max-width: 42ch;
-    margin: 1.55rem 0 1.65rem;
-    color: var(--muted);
-    font-size: clamp(1rem, 1.5vw, 1.15rem);
-  }
-
-  .primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.65rem 1rem;
-    border-radius: 0.2rem;
-    color: var(--paper);
-    background: var(--accent);
-    font-weight: 650;
-    text-decoration: none;
-  }
-
-  .primary:hover {
-    background: var(--ink);
-  }
-
-  .hero-figure,
-  .thumbnail {
-    overflow: hidden;
-    background-color: var(--panel);
-    background-image: radial-gradient(ellipse at center, #2b2924 0%, transparent 70%);
-  }
-
-  .hero-figure {
-    margin: 0;
-    border: 1px solid var(--line);
-    border-radius: 0.4rem;
-  }
-
-  .hero-figure figcaption {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem 1rem;
-    justify-content: space-between;
-    padding: 0.6rem 1rem;
-    border-top: 1px solid var(--line);
-    color: var(--muted);
-    font-family: var(--mono);
-    font-size: 0.72rem;
-  }
-
   .archive {
-    min-height: 11rem;
-    padding: 2rem 0 4.5rem;
-    border-top: 1px solid var(--line);
-    scroll-margin-top: 1rem;
+    padding: clamp(1.85rem, 4vw, 3.4rem) 0 clamp(2rem, 6vw, 5rem);
+    scroll-margin-top: 0.75rem;
   }
 
-  .archive h2 {
-    margin-bottom: 1.5rem;
-    font-size: clamp(2.25rem, 5vw, 3.6rem);
+  h1 {
+    margin-bottom: clamp(1.35rem, 3vw, 2.3rem);
+    font-size: clamp(2.75rem, 6vw, 4.5rem);
   }
 
   .gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(0.8rem, 2vw, 1.25rem);
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  .gallery li {
-    min-width: 0;
-  }
-
   .card {
-    display: flex;
-    height: 100%;
-    flex-direction: column;
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    align-items: end;
+    aspect-ratio: 7 / 4;
     overflow: hidden;
     border: 1px solid var(--line);
-    border-radius: 0.4rem;
+    border-radius: 0.45rem;
     color: var(--ink);
-    background: var(--panel);
+    background: radial-gradient(ellipse at 50% 36%, var(--scene-glow, var(--panel)), var(--paper) 78%);
     text-decoration: none;
   }
 
-  .card:hover {
+  .card[data-exhibit="kuramoto"] {
+    --scene-glow: #20342f;
+  }
+
+  .card[data-exhibit="lorenz"] {
+    --scene-glow: #293145;
+  }
+
+  .card[data-exhibit="voronoi"] {
+    --scene-glow: #29352c;
+  }
+
+  .card[data-exhibit="fourier"] {
+    --scene-glow: #3d3021;
+  }
+
+  .card:hover,
+  .card:focus-visible {
     border-color: var(--accent);
   }
 
-  .thumbnail {
-    display: grid;
-    height: clamp(9rem, 20vw, 13rem);
-    place-items: center;
-    border-bottom: 1px solid var(--line);
+  .card :global(svg) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
   }
 
-  .thumbnail :global(svg) {
-    width: auto;
-    max-width: 100%;
-    max-height: 100%;
-  }
-
-  .card-copy {
+  .card-label {
+    position: relative;
     display: flex;
-    flex: 1;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 1.25rem;
-  }
-
-  .card h3 {
-    font-size: 1.8rem;
-    overflow-wrap: anywhere;
-  }
-
-  .card-summary,
-  .empty {
-    color: var(--muted);
-  }
-
-  .card-summary {
-    margin: 0.55rem 0 1.1rem;
-    font-size: 0.95rem;
-  }
-
-  .card-action {
-    display: flex;
+    align-items: end;
+    justify-content: space-between;
     gap: 0.75rem;
-    align-items: center;
-    margin-top: auto;
-    color: var(--accent);
-    font-size: 0.85rem;
-    font-weight: 650;
+    padding: 1.9rem clamp(0.95rem, 3vw, 1.65rem) clamp(0.75rem, 2vw, 1.2rem);
+    background: linear-gradient(transparent, #101315 83%);
   }
 
-  @media (width <= 700px) {
-    .hero {
+  .card-label h2 {
+    font-size: clamp(1.85rem, 3.4vw, 2.75rem);
+  }
+
+  .card-label span {
+    display: grid;
+    flex: 0 0 2rem;
+    height: 2rem;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    color: var(--accent);
+    background: var(--paper);
+  }
+
+  .card:hover .card-label span,
+  .card:focus-visible .card-label span {
+    border-color: var(--accent);
+    color: var(--paper);
+    background: var(--accent);
+  }
+
+  @media (width <= 650px) {
+    .gallery {
       grid-template-columns: 1fr;
     }
   }

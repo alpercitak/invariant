@@ -11,6 +11,7 @@ The [project plan](PLAN.md) tracks the full exhibit roadmap.
 - [x] Run browser checks for keyboard controls, pause and reset, reduced motion, and the mobile layout.
 - [x] Move exhibit browser behavior and Astro configuration into TypeScript files.
 - [x] Apply self-hosted Instrument Serif and Geist and check typography on desktop and mobile.
+- [x] Put the gallery first and generate each card's scene from its model.
 - [ ] Deploy to Cloudflare Pages and verify the archive and exhibit URLs.
 
 ## Geometry

@@ -1,0 +1,21 @@
+---
+import { rk4, type State } from './model';
+
+function trajectory(initial: State) {
+  const points: State[] = [initial];
+  let state = initial;
+  for (let i = 1; i <= 3600; i += 1) {
+    state = rk4(state);
+    if (i % 2 === 0) points.push(state);
+  }
+  return points.map(([x, , z]) => ({ x: 280 + x * 9, y: 235 - z * 4.2 }));
+}
+const first = trajectory([0.1, 0, 0]);
+const second = trajectory([0.1001, 0, 0]);
+const path = (points: { x: number; y: number }[]) => points.map((point, i) => `${i ? 'L' : 'M'}${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(' ');
+---
+
+<svg viewBox="0 0 560 320" aria-hidden="true" focusable="false">
+  <path d={path(first)} fill="none" stroke="#73c5b7" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" opacity="0.82" />
+  <path d={path(second)} fill="none" stroke="#e8ab61" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" opacity="0.76" />
+</svg>
