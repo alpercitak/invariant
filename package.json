@@ -1,0 +1,23 @@
+{
+  "name": "invariant",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "bun@1.4.2",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "biome ci . && astro check && bun test --pass-with-no-tests"
+  },
+  "dependencies": {
+    "astro": "6.4.8"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "@biomejs/biome": "2.5.14",
+    "typescript": "5.9.3"
+  }
+}
