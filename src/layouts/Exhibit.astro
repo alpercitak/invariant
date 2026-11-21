@@ -1,0 +1,93 @@
+---
+import type { MarkdownLayoutProps } from 'astro';
+import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
+import Base from './Base.astro';
+
+type Props = MarkdownLayoutProps<{
+  title: string;
+  description: string;
+  category: string;
+  question: string;
+}>;
+
+const { title, description, category, question } = Astro.props.frontmatter;
+const slug = Astro.url.pathname.split('/').filter(Boolean).at(-1);
+const experiments = import.meta.glob<AstroComponentFactory>('../exhibits/*/Experiment.astro', {
+  eager: true,
+  import: 'default',
+});
+const Experiment = experiments[`../exhibits/${slug}/Experiment.astro`];
+---
+
+<Base title={title} description={description}>
+  <article class="exhibit">
+    <header class="exhibit-heading">
+      <a class="back" href="/#exhibits">← All exhibits</a>
+      <p class="category">{category}</p>
+      <h1>{title}</h1>
+      <p class="question">{question}</p>
+    </header>
+    {Experiment && <Experiment />}
+    <div class="notes">
+      <slot />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .exhibit {
+    padding: 2rem 0 4rem;
+  }
+
+  .exhibit-heading {
+    margin-bottom: 2rem;
+  }
+
+  .back {
+    display: inline-flex;
+    margin-bottom: 2.5rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+
+  .back:hover {
+    color: var(--accent);
+  }
+
+  .exhibit h1 {
+    max-width: 18ch;
+    font-size: clamp(2.75rem, 7vw, 6rem);
+  }
+
+  .question {
+    max-width: 42ch;
+    margin-bottom: 0;
+    color: var(--muted);
+    font-size: clamp(1.15rem, 2.25vw, 1.55rem);
+  }
+
+  .notes {
+    max-width: 68ch;
+    margin: 3.5rem auto 0;
+    color: var(--muted);
+    font-size: 1.075rem;
+  }
+
+  .notes :global(h2) {
+    margin-top: 2.5rem;
+    color: var(--ink);
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+  }
+
+  .notes :global(strong) {
+    color: var(--ink);
+  }
+
+  .notes :global(math[display="block"]) {
+    max-width: 100%;
+    margin-block: 1.3rem;
+    overflow-x: auto;
+    color: var(--ink);
+  }
+</style>

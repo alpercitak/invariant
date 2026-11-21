@@ -2,6 +2,8 @@
 
 Invariant is an interactive archive of mathematical patterns. Each exhibit starts with a question and gives you a small experiment to explore it.
 
+The archive index links to each exhibit. Exhibit pages pair the experiment with the underlying rule, what to look for, and where the model applies.
+
 ## Run locally
 
 Install Bun and Node.js 22.12 or newer. Then run the following from the repo root.
