@@ -7,13 +7,42 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
   await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused();
   await expect(page.getByRole('heading', { name: 'See math take shape.' })).toBeVisible();
 
-  for (const name of ['Kuramoto synchronization', 'Lorenz attractor', 'Voronoi diagrams']) {
+  for (const name of ['Kuramoto synchronization', 'Lorenz attractor', 'Voronoi diagrams', 'Fourier drawing']) {
     await page.getByRole('link', { name: new RegExp(name) }).click();
     await expect(page.getByRole('heading', { name, level: 1 })).toBeVisible();
     await expect(page.locator('math[display="block"]')).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(360);
     await page.getByRole('link', { name: 'All exhibits' }).click();
   }
+});
+
+test('Fourier redraws with keyboard input and restarts the trace while paused', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/exhibits/fourier/');
+  const slider = page.getByRole('slider', { name: 'Rotating circles' });
+  const error = page.getByLabel('RMS sample error', { exact: true });
+  const play = page.getByRole('button', { name: 'Play' });
+  const image = () => page.evaluate(() => document.querySelector('canvas')?.toDataURL());
+
+  await expect(play).toBeVisible();
+  await expect(error).toHaveText(/^0\.\d+$/);
+  await slider.press('Home');
+  await expect(slider).toHaveValue('0');
+  const initialError = Number(await error.innerText());
+  await slider.press('ArrowRight');
+  await expect(slider).toHaveValue('1');
+  expect(Number(await error.innerText())).toBeLessThan(initialError);
+  await slider.press('End');
+  await expect(slider).toHaveValue('128');
+  await expect(error).toHaveText('<0.001');
+
+  const restingImage = await image();
+  await play.press('Enter');
+  await expect.poll(image).not.toBe(restingImage);
+  await page.getByRole('button', { name: 'Pause' }).press('Enter');
+  await page.getByRole('button', { name: 'Restart trace' }).press('Enter');
+  expect(await image()).toBe(restingImage);
+  await expect(play).toBeVisible();
 });
 
 test('Kuramoto starts paused with reduced motion and couples with keyboard input', async ({ page }) => {

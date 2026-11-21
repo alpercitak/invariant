@@ -14,3 +14,7 @@ The [project plan](PLAN.md) tracks the full exhibit roadmap.
 ## Geometry
 
 - [x] Build the Voronoi exhibit with movable sites and verify cell assignment by nearest-site distance.
+
+## Waves and signals
+
+- [x] Build Fourier drawing with adjustable term count, keyboard controls, and a test that the full set of terms reconstructs the sampled outline.

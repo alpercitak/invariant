@@ -16,7 +16,7 @@ Use Astro to build a static archive index and individual exhibit pages with a sh
 
 1. Set up the site and the exhibit template. Build Kuramoto synchronization first so the archive has one complete example with working controls, a readable explanation, and model tests.
 2. Add the Lorenz attractor and launch with both exhibits. Check reproducible reset, keyboard controls, paused and reduced-motion states, and a mobile layout before publishing.
-3. Add Voronoi diagrams next to extend the archive from simulations to interactive geometry. Add the remaining exhibits individually as their experiments, explanations, and math checks are ready.
+3. Add Voronoi diagrams to extend the archive from simulations to interactive geometry, then add Fourier drawing to introduce waves and signals. Add the remaining exhibits individually as their experiments, explanations, and math checks are ready.
 
 Each exhibit should be checked against a known result, an invariant, or an appropriate numerical or statistical reference. For example, check that uncoupled Kuramoto oscillators follow their natural frequencies and that the Lorenz solver agrees over a short interval when the time step is reduced.
 

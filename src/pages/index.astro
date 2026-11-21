@@ -11,7 +11,7 @@ const entries = Object.entries(import.meta.glob<Entry>('./exhibits/*.md', { eage
   ...page,
   slug: path.split('/').at(-1)?.replace(/\.md$/, '') ?? '',
 }));
-const order = new Map(['kuramoto', 'lorenz', 'voronoi'].map((slug, index) => [slug, index]));
+const order = new Map(['kuramoto', 'lorenz', 'voronoi', 'fourier'].map((slug, index) => [slug, index]));
 const exhibits = entries.sort((a, b) => (order.get(a.slug) ?? order.size) - (order.get(b.slug) ?? order.size));
 ---
 

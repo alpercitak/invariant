@@ -28,6 +28,8 @@ Related synchronization questions arise in flashing fireflies, rhythmically acti
 
 Try the [Lorenz attractor](/exhibits/lorenz/) to see how small differences can grow in another dynamical system.
 
+For another experiment with rotating arrows, try [Fourier drawing](/exhibits/fourier/) and watch their combined motion trace an outline.
+
 ## Further reading
 
 - Yoshiki Kuramoto, [“Self-entrainment of a population of coupled non-linear oscillators”](https://cir.nii.ac.jp/crid/1361418518461244800) (1975).

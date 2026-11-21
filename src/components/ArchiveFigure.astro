@@ -1,4 +1,7 @@
 ---
+import { decompose, evaluate, type Point, sampleOutline } from '@/exhibits/fourier/model';
+import { DEFAULT_CIRCLES, outline } from '@/exhibits/fourier/outline';
+
 interface Props {
   kind: string;
 }
@@ -10,6 +13,9 @@ const meanX = 117 * angles.reduce((sum, angle) => sum + Math.cos(angle), 0) / an
 const meanY = 117 * angles.reduce((sum, angle) => sum + Math.sin(angle), 0) / angles.length;
 const meanLength = Math.hypot(meanX, meanY);
 const meanAngle = Math.atan2(meanY, meanX) * 180 / Math.PI;
+const previewHarmonics = kind === 'fourier' ? decompose(sampleOutline(outline)).slice(0, DEFAULT_CIRCLES + 1) : undefined;
+const previewPoints = previewHarmonics && Array.from({ length: 128 }, (_, index) => evaluate(previewHarmonics, index / 128));
+const thumbnailPoints = (points: readonly Point[]) => points.map(({ x, y }) => `${(255 + x * 123).toFixed(1)},${(173 - y * 123).toFixed(1)}`).join(' ');
 ---
 
 <svg viewBox="0 0 510 346" fill="none" aria-hidden="true" focusable="false">
@@ -19,6 +25,11 @@ const meanAngle = Math.atan2(meanY, meanX) * 180 / Math.PI;
     <g transform="translate(255 172)">
       <path d="M 0 63 C -49 32 -137 7 -157 -42 C -192 -131 -54 -151 -19 -75 C 6 -20 -57 53 -102 17 C -143 -22 -107 -71 -70 -60 C -29 -48 -24 15 0 63 C 60 66 139 3 150 -53 C 169 -148 38 -141 15 -71 C -7 -12 65 39 101 2 C 132 -37 97 -69 69 -51 C 43 -36 49 1 20 35" stroke="var(--secondary)" stroke-width="2" />
       <path d="M -13 55 C -63 43 -150 2 -170 -54 C -200 -143 -40 -149 -15 -63 C 6 0 -66 53 -111 9 C -145 -26 -112 -77 -72 -65 C -37 -49 -31 17 -13 55 C 45 86 131 19 161 -39 C 209 -137 48 -154 18 -83 C -5 -29 44 42 92 15 C 132 -4 115 -71 73 -57 C 35 -41 52 7 10 50" stroke="var(--accent)" stroke-width="1.25" opacity="0.67" />
+    </g>
+  ) : previewPoints ? (
+    <g>
+      <polygon points={thumbnailPoints(outline)} stroke="var(--muted)" stroke-opacity="0.65" stroke-dasharray="6 5" />
+      <polygon points={thumbnailPoints(previewPoints)} stroke="var(--accent)" stroke-width="2" />
     </g>
   ) : kind === 'voronoi' ? (
     <g stroke="var(--secondary)" stroke-width="1.5">
