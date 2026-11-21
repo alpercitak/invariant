@@ -22,3 +22,4 @@ The [project plan](PLAN.md) tracks the full exhibit roadmap.
 ## Waves and signals
 
 - [x] Build Fourier drawing with adjustable term count, keyboard controls, and a test that the full set of terms reconstructs the sampled outline.
+- [x] Give the Fourier legend, controls, and exhibit text more room at desktop and phone widths.

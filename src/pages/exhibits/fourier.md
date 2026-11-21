@@ -8,9 +8,13 @@ guide: Start with one circle, then add more. Watch the gold curve bring out the 
 
 ## What to look for
 
-Move the slider to one circle. Its arrow sweeps around at a steady rate, so the gold point traces a loop. As you add circles, each new arrow starts where the last one ends. The tip of the chain follows the combined motion. Watch what happens around the nose and the notch as the gold curve comes closer to the dashed outline.
+Move the slider to one circle. Its arrow sweeps around at a steady rate, so the gold point traces a loop.
 
-The display keeps the strongest rotations first. A circle's size shows how much that rotation contributes. Its speed tells you how many times it turns during one trip around the outline. Negative frequencies turn clockwise. The stationary term sets the center of the drawing and stays in place even when the slider is at zero.
+As you add circles, each new arrow starts where the last one ends. The tip of the chain follows the combined motion. Watch the nose and the notch as the gold curve approaches the dashed outline.
+
+The display keeps the strongest rotations first. A circle's size shows how much it contributes. Its speed tells you how many times it turns per lap. Negative frequencies turn clockwise.
+
+The stationary term sets the center of the drawing and stays in place even when the slider is at zero.
 
 ## The rule
 

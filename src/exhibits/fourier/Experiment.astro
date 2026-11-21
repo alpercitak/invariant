@@ -25,10 +25,10 @@ import { DEFAULT_CIRCLES } from './outline';
         <input id="fourier-count" type="range" min="0" max={SAMPLE_COUNT - 1} value={DEFAULT_CIRCLES} />
         <output id="fourier-count-value" for="fourier-count" aria-live="off">{DEFAULT_CIRCLES}</output>
       </div>
-      <div class="scene-actions">
-        <button id="fourier-play" type="button">Play</button>
-        <button id="fourier-restart" type="button">Restart trace</button>
-      </div>
+    </div>
+    <div class="scene-actions">
+      <button id="fourier-play" type="button">Play</button>
+      <button id="fourier-restart" type="button">Restart trace</button>
     </div>
     <p class="scene-readout">RMS sample error <output id="fourier-error" aria-label="RMS sample error">—</output></p>
   </div>
@@ -37,6 +37,35 @@ import { DEFAULT_CIRCLES } from './outline';
 <script src="./experiment.ts"></script>
 
 <style>
+  .scene-legend {
+    gap: 0.65rem 1.4rem;
+    margin-top: 1rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+  }
+
+  .scene-toolbar {
+    row-gap: 1rem;
+    margin-top: 1.2rem;
+  }
+
+  .scene-controls {
+    flex-basis: 100%;
+    gap: 0.65rem 1rem;
+  }
+
+  .scene-readout {
+    display: flex;
+    align-items: baseline;
+    gap: 0.65rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+  }
+
+  .scene-readout output {
+    font-family: var(--mono);
+  }
+
   .scene-legend .reference {
     border-top: 2px dashed var(--muted);
   }

@@ -43,7 +43,7 @@ const Experiment = experiments[`../exhibits/${slug}/Experiment.astro`];
   }
 
   .exhibit-heading {
-    margin-bottom: 1.25rem;
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
   }
 
   .back {
@@ -60,24 +60,26 @@ const Experiment = experiments[`../exhibits/${slug}/Experiment.astro`];
 
   .exhibit h1 {
     font-size: clamp(2.65rem, 6vw, 4.6rem);
+    line-height: 1.1;
+    letter-spacing: normal;
   }
 
   .question {
     max-width: 42ch;
-    margin: 0.4rem 0 0;
+    margin: 0.65rem 0 0;
     color: var(--muted);
     font-size: clamp(1rem, 1.85vw, 1.3rem);
   }
 
   .guide {
-    margin-top: 0.75rem;
+    margin-top: 1rem;
     border: 1px solid var(--line);
     border-radius: 0.35rem;
     background: var(--panel);
   }
 
   .guide summary {
-    padding: 0.65rem 1rem;
+    padding: 0.8rem 1rem;
     color: var(--accent);
     font-weight: 600;
     cursor: pointer;
@@ -86,21 +88,32 @@ const Experiment = experiments[`../exhibits/${slug}/Experiment.astro`];
   .guide p {
     max-width: 72ch;
     margin: 0;
-    padding: 0 1rem 0.85rem;
+    padding: 0 1rem 1rem;
     color: var(--muted);
   }
 
   .notes {
-    max-width: 68ch;
-    margin: 2.65rem auto 0;
+    max-width: 62ch;
+    margin: 3rem auto 0;
     color: var(--muted);
     font-size: 1.075rem;
+    line-height: 1.75;
   }
 
   .notes :global(h2) {
     margin-top: 2.5rem;
     color: var(--ink);
     font-size: clamp(1.6rem, 4vw, 2.2rem);
+    line-height: 1.2;
+    letter-spacing: normal;
+  }
+
+  .notes :global(p) {
+    margin-block: 1rem;
+  }
+
+  .notes :global(li + li) {
+    margin-top: 0.6rem;
   }
 
   .notes :global(strong) {
