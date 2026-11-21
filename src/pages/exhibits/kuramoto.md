@@ -8,7 +8,7 @@ question: Can rhythms synchronize?
 
 ## One shared pull
 
-Imagine many clocks that tick at slightly different speeds. Each oscillator has a phase <math><msub><mi>θ</mi><mi>i</mi></msub></math>, its position in a repeating cycle, and a natural angular frequency <math><msub><mi>ω</mi><mi>i</mi></msub></math>, measured here in radians per second. The Kuramoto rule gives each oscillator a gentle pull toward the crowd’s average phase:
+Imagine many clocks that tick at slightly different speeds. Each oscillator has a phase <math><msub><mi>θ</mi><mi>i</mi></msub></math>, its position in a repeating cycle, and a natural angular frequency <math><msub><mi>ω</mi><mi>i</mi></msub></math>, measured here in radians per second. The Kuramoto rule gives each oscillator a gentle pull toward the crowd’s average phase.
 
 <math display="block" aria-label="The rate of change of oscillator i's phase equals its natural frequency plus coupling K times coherence r times the sine of the average phase psi minus its phase theta i">
   <mfrac><mrow><mi>d</mi><msub><mi>θ</mi><mi>i</mi></msub></mrow><mrow><mi>d</mi><mi>t</mi></mrow></mfrac>
@@ -20,11 +20,13 @@ Here <math><mi>K</mi></math> is the coupling strength and <math><mi>r</mi></math
 
 ## What this model leaves out
 
-The dots are phases, not physical objects. Every oscillator feels the same average pull, and their natural frequencies are fixed and evenly spread from −1.4 to +1.4 radians per second. This small, finite crowd is a useful experiment, not a prediction for every real population: its transition is less sharp than the idealized infinite-population theory. The simulation advances in small numerical time steps, so the displayed path is an approximation.
+The dots show positions within a cycle. Every oscillator feels the influence of the group, and their natural frequencies are fixed and evenly spread from −1.4 to +1.4 radians per second. With 64 oscillators, the transition can look smoother than the one predicted for an idealized infinite population. The simulation approximates motion with small numerical time steps.
 
 ## Where the idea appears
 
-Related synchronization questions arise in flashing fireflies, rhythmically active neurons, and coupled electrical generators. The model is a starting point for studying collective timing, not a detailed account of any one of those systems.
+Related synchronization questions arise in flashing fireflies, rhythmically active neurons, and coupled electrical generators. The model isolates the collective timing shared across these systems.
+
+Try the [Lorenz attractor](/exhibits/lorenz/) to see how small differences can grow in another dynamical system.
 
 ## Further reading
 

@@ -1,0 +1,167 @@
+---
+---
+
+<section class="experiment" aria-labelledby="experiment-title">
+  <h2 id="experiment-title" class="sr-only">Two nearby Lorenz trajectories</h2>
+  <div class="controls">
+    <label for="separation">Initial separation <output id="separation-value">0.10</output></label>
+    <input id="separation" type="range" min="0.01" max="1" step="0.01" value="0.1" />
+    <button id="toggle" type="button">Pause</button>
+    <button id="reset" type="button">Reset</button>
+  </div>
+  <ul class="legend" aria-label="Trajectories">
+    <li><span class="baseline" aria-hidden="true"></span>Baseline</li>
+    <li><span class="shifted" aria-hidden="true"></span>Shifted start</li>
+  </ul>
+  <canvas id="plot" role="img" aria-label="Two Lorenz trajectories viewed in the x-z plane. Amber begins at (1, 1, 1); teal begins nearby. Their paths separate over time."></canvas>
+  <p id="readout" class="readout">Time 0.00 · separation 0.10</p>
+</section>
+
+<script>
+  import { distance, rk4, STEP, type State } from "./model";
+
+  function required<T>(element: T | null): T {
+    if (!element) throw new Error("Lorenz exhibit controls are missing");
+    return element;
+  }
+
+  const canvas = required(document.querySelector<HTMLCanvasElement>("#plot"));
+  const context = required(canvas.getContext("2d"));
+  const slider = required(document.querySelector<HTMLInputElement>("#separation"));
+  const value = required(document.querySelector<HTMLOutputElement>("#separation-value"));
+  const toggle = required(document.querySelector<HTMLButtonElement>("#toggle"));
+  const reset = required(document.querySelector<HTMLButtonElement>("#reset"));
+  const readout = required(document.querySelector<HTMLParagraphElement>("#readout"));
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  const colors = { paper: "#111416", amber: "#f0bd78", teal: "#8dd2c9", muted: "#afb9b9", line: "#434d50" };
+  let trajectories: State[][] = [[], []];
+  let states: State[] = [];
+  let time = 0;
+  let playing = !reducedMotion.matches;
+  let previous = 0;
+  let accumulator = 0;
+  let frameId = 0;
+
+  function initialize() {
+    const separation = Number(slider.value);
+    states = [[1, 1, 1], [1 + separation, 1, 1]];
+    trajectories = [[states[0]], [states[1]]];
+    time = 0;
+    accumulator = 0;
+    value.value = separation.toFixed(2);
+    draw();
+    updateReadout();
+  }
+
+  function updateReadout() {
+    readout.textContent = `Time ${time.toFixed(2)} · current distance ${distance(states[0], states[1]).toFixed(2)}`;
+  }
+
+  function draw() {
+    const rect = canvas.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    if (canvas.width !== Math.round(rect.width * dpr) || canvas.height !== Math.round(rect.height * dpr)) {
+      canvas.width = Math.round(rect.width * dpr);
+      canvas.height = Math.round(rect.height * dpr);
+    }
+    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+    context.fillStyle = colors.paper;
+    context.fillRect(0, 0, rect.width, rect.height);
+    const margin = 28;
+    const plotWidth = rect.width - margin * 2;
+    const plotHeight = rect.height - margin * 2;
+    const x = (value: number) => margin + ((value + 25) / 50) * plotWidth;
+    const y = (value: number) => margin + (value / 55) * plotHeight;
+    context.strokeStyle = colors.line;
+    context.lineWidth = 1;
+    context.beginPath();
+    context.moveTo(margin, margin);
+    context.lineTo(margin, rect.height - margin);
+    context.lineTo(rect.width - margin, rect.height - margin);
+    context.stroke();
+    context.fillStyle = colors.muted;
+    context.font = "12px system-ui, sans-serif";
+    context.fillText("z", 8, margin + 4);
+    context.fillText("x", rect.width - margin + 8, rect.height - margin + 4);
+    [colors.amber, colors.teal].forEach((color, index) => {
+      context.beginPath();
+      context.strokeStyle = color;
+      context.lineWidth = 1.7;
+      context.setLineDash(index === 0 ? [] : [5, 3]);
+      trajectories[index].forEach((point, pointIndex) => {
+        const px = x(point[0]);
+        const py = rect.height - y(point[2]);
+        if (pointIndex === 0) context.moveTo(px, py);
+        else context.lineTo(px, py);
+      });
+      context.stroke();
+      const current = states[index];
+      context.beginPath();
+      context.fillStyle = color;
+      context.arc(x(current[0]), rect.height - y(current[2]), 4, 0, Math.PI * 2);
+      context.fill();
+    });
+    context.setLineDash([]);
+  }
+
+  function frame(now: number) {
+    if (!playing) return;
+    if (previous) accumulator += Math.min((now - previous) / 1000, 0.05);
+    previous = now;
+    while (accumulator >= STEP) {
+      states = states.map((state) => rk4(state, STEP));
+      for (const [index, path] of trajectories.entries()) path.push(states[index]);
+      time += STEP;
+      accumulator -= STEP;
+      if (trajectories[0].length > 3000) trajectories = trajectories.map((path) => path.slice(-2500));
+    }
+    draw();
+    updateReadout();
+    frameId = requestAnimationFrame(frame);
+  }
+
+  function setPlaying(next: boolean) {
+    playing = next;
+    toggle.textContent = playing ? "Pause" : "Play";
+    cancelAnimationFrame(frameId);
+    previous = 0;
+    if (playing) frameId = requestAnimationFrame(frame);
+  }
+
+  slider.addEventListener("input", initialize);
+  reset.addEventListener("click", initialize);
+  toggle.addEventListener("click", () => setPlaying(!playing));
+  new ResizeObserver(draw).observe(canvas);
+  reducedMotion.addEventListener("change", () => {
+    if (reducedMotion.matches) setPlaying(false);
+  });
+  initialize();
+  setPlaying(playing);
+  window.addEventListener("pagehide", () => cancelAnimationFrame(frameId));
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted && playing) {
+      previous = 0;
+      frameId = requestAnimationFrame(frame);
+    }
+  });
+</script>
+
+<style>
+  .experiment { background: var(--panel); border: 1px solid var(--line); border-radius: 1rem; padding: clamp(1rem, 3vw, 1.5rem); }
+  .controls { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }
+  label { color: var(--ink); font-weight: 650; }
+  output { color: var(--muted); font: .9rem var(--mono); margin-left: .4rem; }
+  input[type="range"] { accent-color: var(--accent); flex: 1 1 12rem; min-width: 9rem; }
+  button { background: var(--paper); border: 1px solid var(--line); border-radius: .5rem; color: var(--ink); cursor: pointer; font: inherit; font-weight: 650; padding: .55rem .85rem; }
+  button:hover { border-color: var(--accent); }
+  :focus-visible { outline: 3px solid var(--secondary); outline-offset: 3px; }
+  canvas { display: block; width: 100%; height: clamp(260px, 48vw, 430px); margin-top: 1rem; }
+  .legend { display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; padding: 0; margin: 1rem 0 0; list-style: none; color: var(--muted); font: .8rem var(--mono); }
+  .legend li { display: flex; align-items: center; gap: .5rem; }
+  .legend span { display: inline-block; width: 1.5rem; border-top: 2px solid var(--accent); }
+  .legend .shifted { border-top: 2px dashed var(--secondary); }
+  .readout { color: var(--muted); font: .9rem var(--mono); margin: .75rem 0 0; }
+  .sr-only { clip: rect(0,0,0,0); clip-path: inset(50%); height: 1px; overflow: hidden; position: absolute; white-space: nowrap; width: 1px; }
+  @media (max-width: 520px) { .controls { gap: .65rem; } button { flex: 1; } }
+</style>

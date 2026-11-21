@@ -5,6 +5,7 @@ Invariant is an interactive archive of mathematical patterns. Each exhibit start
 ## Exhibits
 
 - [Kuramoto synchronization](src/pages/exhibits/kuramoto.md) lets you adjust how strongly a group of oscillators influences one another and watch for a shared rhythm.
+- [Lorenz attractor](src/pages/exhibits/lorenz.md) lets you change the starting distance between two trajectories and watch when their futures diverge.
 
 ## Run locally
 
