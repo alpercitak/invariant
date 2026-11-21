@@ -11,6 +11,6 @@ The [project plan](PLAN.md) tracks the full exhibit roadmap.
 - [ ] Run browser checks for keyboard controls, pause and reset, reduced motion, and the mobile layout.
 - [ ] Deploy to Cloudflare Pages and verify the archive and exhibit URLs.
 
-## Next exhibit
+## Geometry
 
-- [ ] Build the Voronoi exhibit with movable sites and verify cell assignment by nearest-site distance.
+- [x] Build the Voronoi exhibit with movable sites and verify cell assignment by nearest-site distance.
