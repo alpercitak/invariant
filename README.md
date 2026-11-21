@@ -8,6 +8,7 @@ Invariant is an interactive archive of mathematical patterns. Pick a scene from 
 - [Lorenz attractor](src/pages/exhibits/lorenz.md) lets you change the starting distance between two trajectories and watch when their futures diverge.
 - [Voronoi diagrams](src/pages/exhibits/voronoi.md) shows how regions change as you move warehouses around a map.
 - [Fourier drawing](src/pages/exhibits/fourier.md) lets you add rotating circles to redraw a paper plane and compare the result with the original outline.
+- [Logistic map](src/pages/exhibits/logistic.md) lets you adjust population growth and follow the shift from a steady level to repeating cycles and irregular fluctuations.
 
 ## Run locally
 

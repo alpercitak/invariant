@@ -15,6 +15,10 @@ The [project plan](PLAN.md) tracks the full exhibit roadmap.
 - [x] Put the visualization first on exhibit pages and add optional reading guidance.
 - [ ] Deploy to Cloudflare Pages and verify the archive and exhibit URLs.
 
+## Dynamics
+
+- [x] Build the logistic map exhibit with a bifurcation diagram, growth presets, and model checks for a steady value and a two-generation cycle.
+
 ## Geometry
 
 - [x] Build the Voronoi exhibit with movable sites and verify cell assignment by nearest-site distance.

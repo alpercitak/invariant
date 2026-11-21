@@ -8,7 +8,13 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
   await expect(page.getByRole('heading', { name: 'The Pattern Archive', level: 1 })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(360);
 
-  for (const name of ['Kuramoto synchronization', 'Lorenz attractor', 'Voronoi diagrams', 'Fourier drawing']) {
+  for (const name of [
+    'Kuramoto synchronization',
+    'Lorenz attractor',
+    'Voronoi diagrams',
+    'Fourier drawing',
+    'Logistic map',
+  ]) {
     const card = page.getByRole('link', { name, exact: true });
     await expect(card.locator('svg')).toBeVisible();
     await card.click();
@@ -22,6 +28,37 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     await expect(guide.locator('p')).not.toBeEmpty();
     await page.getByRole('link', { name: 'All exhibits' }).click();
   }
+});
+
+test('Logistic growth presets and keyboard input update both plots', async ({ page }) => {
+  await page.goto('/exhibits/logistic/');
+  const slider = page.getByRole('slider', { name: 'Growth factor' });
+  const cursor = page.locator('#logistic-cursor');
+  const trace = page.locator('#logistic-trace');
+  const traceImage = page.getByRole('img', { name: /^The last 48 population values/ });
+  const settledValues = page.locator('#logistic-range');
+  const initialPoints = await trace.getAttribute('points');
+
+  await expect(settledValues).toHaveText('0.513–0.799');
+  await page.getByRole('button', { name: 'Settles' }).press('Enter');
+  await expect(slider).toHaveValue('2.8');
+  await expect(settledValues).toHaveText('0.643');
+  await expect(traceImage).toHaveAccessibleDescription(/^Last eight values in order: 0\.643, 0\.643/);
+  expect(await trace.getAttribute('points')).not.toBe(initialPoints);
+
+  await page.getByRole('button', { name: 'Irregular' }).click();
+  await expect(slider).toHaveValue('3.9');
+  const selectedMarks = await page.locator('#logistic-selection').getAttribute('d');
+  const diagramMarks = await page.locator('#logistic-columns').getAttribute('d');
+  expect(selectedMarks).toBeTruthy();
+  expect(diagramMarks).toContain(selectedMarks);
+
+  await slider.press('End');
+  await expect(slider).toHaveValue('4');
+  await expect(cursor).toHaveAttribute('transform', 'translate(552)');
+  await page.getByRole('button', { name: 'Alternates' }).click();
+  await expect(settledValues).toHaveText('0.513–0.799');
+  expect(await trace.getAttribute('points')).toBe(initialPoints);
 });
 
 test('Fourier redraws with keyboard input and restarts the trace while paused', async ({ page }) => {

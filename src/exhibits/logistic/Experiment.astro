@@ -1,0 +1,106 @@
+---
+import Bifurcation from './Bifurcation.astro';
+import { DEFAULT_GROWTH, GROWTH_MAX, GROWTH_MIN, logisticSamples, SAMPLE_COUNT } from './model';
+import { PLOT_INSET, PLOT_RIGHT, PLOT_WIDTH, sampleRange, sampleY, TRACE_HEIGHT, traceDescription, tracePoints } from './plot';
+
+const samples = logisticSamples(DEFAULT_GROWTH);
+---
+
+<section class="scene-panel" aria-label="Logistic map experiment">
+  <figure class="chart">
+    <figcaption>Bifurcation diagram</figcaption>
+    <Bifurcation />
+    <div class="axis-label" aria-hidden="true">
+      <span>{GROWTH_MIN.toFixed(1)}</span><span>Growth factor r</span><span>{GROWTH_MAX.toFixed(1)}</span>
+    </div>
+  </figure>
+  <figure class="chart">
+    <figcaption>Population by generation (0–1)</figcaption>
+    <svg
+      class="scene-view trace"
+      viewBox={`0 0 ${PLOT_WIDTH} ${TRACE_HEIGHT}`}
+      preserveAspectRatio="none"
+      role="img"
+      aria-label={`The last ${SAMPLE_COUNT} population values in order. Lines connect successive generations.`}
+      aria-describedby="logistic-trace-description"
+    >
+      <desc id="logistic-trace-description">{traceDescription(samples)}</desc>
+      {[0, 0.5, 1].map((value) => {
+        const y = sampleY(value, TRACE_HEIGHT);
+        return <path d={`M${PLOT_INSET} ${y}H${PLOT_RIGHT}`} stroke="var(--line)" vector-effect="non-scaling-stroke" />;
+      })}
+      <polyline
+        id="logistic-trace"
+        points={tracePoints(samples)}
+        stroke="var(--accent)"
+        stroke-width="1.5"
+        stroke-linejoin="round"
+        vector-effect="non-scaling-stroke"
+        fill="none"
+      />
+    </svg>
+  </figure>
+  <div class="scene-toolbar">
+    <div class="scene-controls">
+      <label for="logistic-growth">Growth factor</label>
+      <div class="scene-range">
+        <input id="logistic-growth" type="range" min={GROWTH_MIN} max={GROWTH_MAX} step="0.001" value={DEFAULT_GROWTH} />
+        <output id="logistic-growth-value" for="logistic-growth" aria-live="off">{DEFAULT_GROWTH.toFixed(3)}</output>
+      </div>
+    </div>
+    <p class="scene-readout">Sampled values <output id="logistic-range" aria-label="Sampled population range">{sampleRange(samples)}</output></p>
+    <div class="scene-actions">
+      <button type="button" name="logistic-preset" value="2.8">Settles</button>
+      <button type="button" name="logistic-preset" value={DEFAULT_GROWTH}>Alternates</button>
+      <button type="button" name="logistic-preset" value="3.9">Irregular</button>
+    </div>
+  </div>
+</section>
+
+<script src="./experiment.ts"></script>
+
+<style>
+  .chart {
+    display: grid;
+    gap: 0.45rem;
+    margin: 0;
+  }
+
+  .chart + .chart {
+    margin-top: 1.1rem;
+  }
+
+  .chart figcaption {
+    color: var(--muted);
+    font-size: 0.875rem;
+  }
+
+  .chart :global(.scene-view) {
+    height: clamp(9rem, 28vw, 17rem);
+  }
+
+  .chart .trace {
+    height: clamp(4.75rem, 12vw, 7rem);
+  }
+
+  .axis-label {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font: 0.8rem / 1.45 var(--mono);
+  }
+
+  .scene-range output,
+  .scene-readout output {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .scene-readout output {
+    display: inline-block;
+    min-width: 11ch;
+  }
+
+  .scene-actions {
+    flex-basis: 100%;
+  }
+</style>

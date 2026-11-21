@@ -1,0 +1,67 @@
+---
+import { DEFAULT_GROWTH, GROWTH_MAX, GROWTH_MIN, logisticSamples } from './model';
+import { DIAGRAM_HEIGHT, growthX, PLOT_INSET, PLOT_RIGHT, PLOT_WIDTH, sampleMarks, sampleY } from './plot';
+
+interface Props {
+  preview?: boolean;
+}
+
+const { preview = false } = Astro.props;
+const gridStep = 5;
+const firstTick = Math.round(GROWTH_MIN * 1000);
+const lastTick = Math.round(GROWTH_MAX * 1000);
+const diagram = Array.from({ length: (lastTick - firstTick) / gridStep + 1 }, (_, index) => {
+  const growth = (firstTick + index * gridStep) / 1000;
+  return sampleMarks(growthX(growth), logisticSamples(growth), DIAGRAM_HEIGHT);
+}).join('');
+const x = growthX(DEFAULT_GROWTH);
+---
+
+<svg
+  class:list={{ 'scene-view': !preview }}
+  viewBox={preview ? '-24 -54 608 347.5' : `0 0 ${PLOT_WIDTH} ${DIAGRAM_HEIGHT}`}
+  preserveAspectRatio={preview ? undefined : 'none'}
+  role={preview ? undefined : 'img'}
+  aria-hidden={preview ? 'true' : undefined}
+  aria-label={preview ? undefined : 'Bifurcation diagram. Growth factor increases from left to right. Each dot is a sampled population, with larger values higher up. The gold line marks the selected growth factor.'}
+  focusable="false"
+>
+  <g stroke="var(--line)" fill="none">
+    {[0, 0.5, 1].map((value) => {
+      const y = sampleY(value, DIAGRAM_HEIGHT);
+      return <path d={`M${PLOT_INSET} ${y}H${PLOT_RIGHT}`} vector-effect="non-scaling-stroke" />;
+    })}
+  </g>
+  <path
+    id={preview ? undefined : 'logistic-columns'}
+    d={diagram}
+    stroke="var(--secondary)"
+    stroke-width={preview ? 1.35 : 1.5}
+    stroke-opacity="0.72"
+    stroke-linecap="round"
+    vector-effect="non-scaling-stroke"
+    fill="none"
+  />
+  {!preview && (
+    <g stroke="var(--accent)">
+      <line
+        id="logistic-cursor"
+        x1="0"
+        x2="0"
+        y1={PLOT_INSET}
+        y2={DIAGRAM_HEIGHT - PLOT_INSET}
+        transform={`translate(${x})`}
+        stroke-dasharray="4 4"
+        vector-effect="non-scaling-stroke"
+      />
+      <path
+        id="logistic-selection"
+        d={sampleMarks(x, logisticSamples(DEFAULT_GROWTH), DIAGRAM_HEIGHT)}
+        stroke-width="3"
+        stroke-linecap="round"
+        vector-effect="non-scaling-stroke"
+        fill="none"
+      />
+    </g>
+  )}
+</svg>
