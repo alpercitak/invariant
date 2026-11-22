@@ -10,6 +10,7 @@ Invariant is an interactive archive of mathematical patterns. Pick a scene from 
 - [Fourier drawing](src/pages/exhibits/fourier.md) lets you add rotating circles to redraw a paper plane and compare the result with the original outline.
 - [Logistic map](src/pages/exhibits/logistic.md) lets you adjust population growth and follow the shift from a steady level to repeating cycles and irregular fluctuations.
 - [Galton board](src/pages/exhibits/galton.md) lets you drop balls through pegs, bias the turns, and compare the observed distribution with its binomial prediction.
+- [Mandelbrot set](src/pages/exhibits/mandelbrot.md) lets you zoom into a fractal and see how the step limit changes which points can be shown to escape.
 
 ## Run locally
 

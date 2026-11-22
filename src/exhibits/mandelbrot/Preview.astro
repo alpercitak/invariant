@@ -1,0 +1,23 @@
+---
+import { COLORS, DEFAULT_STEPS, escapeMap, shadeIndex, VIEWS } from './plot';
+
+const width = 210;
+const height = 120;
+const pixels = escapeMap(VIEWS[0], width, height, DEFAULT_STEPS).map((step) => shadeIndex(step, DEFAULT_STEPS));
+const paths = COLORS.map(() => '');
+
+for (let row = 0; row < height; row += 1) {
+  let start = 0;
+  while (start < width) {
+    const shade = pixels[row * width + start];
+    let end = start + 1;
+    while (end < width && pixels[row * width + end] === shade) end += 1;
+    paths[shade] += `M${start} ${row}h${end - start}v1H${start}z`;
+    start = end;
+  }
+}
+---
+
+<svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true" focusable="false" shape-rendering="crispEdges">
+  {paths.map((path, shade) => <path d={path} fill={`rgb(${COLORS[shade].join(' ')})`} />)}
+</svg>

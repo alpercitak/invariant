@@ -23,6 +23,10 @@ The [project plan](PLAN.md) tracks the full exhibit roadmap.
 
 - [x] Build the Voronoi exhibit with movable sites and verify cell assignment by nearest-site distance.
 
+## Emergence and fractals
+
+- [x] Build a Mandelbrot escape map with zoom presets, a step limit, and tests for known bounded and escaping orbits.
+
 ## Probability
 
 - [x] Build the Galton board with single and batch drops, adjustable bias, and tests for the fair binomial distribution and biased mean.

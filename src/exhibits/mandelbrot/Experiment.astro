@@ -1,0 +1,116 @@
+---
+import { centerReadout, DEFAULT_STEPS, MAX_STEPS, MIN_STEPS, VIEWS } from './plot';
+---
+
+<section class="scene-panel" aria-label="Mandelbrot set experiment">
+  <div class="viewport">
+    <canvas
+      id="mandelbrot-plot"
+      class="scene-view"
+      width="512"
+      height="320"
+      role="img"
+      aria-label="Mandelbrot escape map"
+      aria-describedby="mandelbrot-legend mandelbrot-view-description"
+    >
+      The Mandelbrot set appears as a dark shape surrounded by colored bands. The colors show how many steps each point takes to escape.
+    </canvas>
+    <span class="center-mark" aria-hidden="true"></span>
+  </div>
+  <ul id="mandelbrot-legend" class="scene-legend" aria-label="Plot legend">
+    <li><span class="gradient" aria-hidden="true"></span>Escape time · early to late</li>
+    <li><span class="bounded" aria-hidden="true"></span>No escape within limit</li>
+  </ul>
+  <div class="scene-toolbar">
+    <div class="scene-actions">
+      {VIEWS.map((view, index) => (
+        <button type="button" name="mandelbrot-view" value={index} aria-pressed={index === 0 ? 'true' : 'false'}>
+          {view.name}
+        </button>
+      ))}
+    </div>
+    <div class="scene-controls">
+      <label for="mandelbrot-limit">Step limit</label>
+      <div class="scene-range">
+        <input id="mandelbrot-limit" type="range" min={MIN_STEPS} max={MAX_STEPS} step="8" value={DEFAULT_STEPS} />
+        <output id="mandelbrot-limit-value" for="mandelbrot-limit" aria-live="off">{DEFAULT_STEPS}</output>
+      </div>
+    </div>
+    <p class="scene-readout">Center <output id="mandelbrot-probe" aria-label="Center point escape result">{centerReadout(VIEWS[0], DEFAULT_STEPS)}</output></p>
+  </div>
+  <p id="mandelbrot-view-description" class="visually-hidden">{VIEWS[0].description}</p>
+</section>
+
+<script src="./experiment.ts"></script>
+
+<style>
+  .viewport {
+    position: relative;
+    border-radius: 0.2rem;
+    background: #151a2a;
+  }
+
+  #mandelbrot-plot {
+    height: auto;
+    max-width: 45rem;
+    margin-inline: auto;
+  }
+
+  .center-mark {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: 0.48rem;
+    height: 0.48rem;
+    border: 1px solid var(--ink);
+    border-radius: 50%;
+    outline: 1px solid var(--paper);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .scene-legend {
+    gap: 0.55rem 1.3rem;
+    margin-top: 1rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+  }
+
+  .scene-legend span {
+    display: inline-block;
+    width: 2rem;
+    height: 0.55rem;
+    border: 1px solid var(--muted);
+    border-radius: 0.1rem;
+  }
+
+  .gradient {
+    background: linear-gradient(to right, #151a2a, #247b85, #f4cb7b);
+  }
+
+  .bounded {
+    background: #080b11;
+  }
+
+  .scene-toolbar {
+    row-gap: 0.9rem;
+    margin-top: 1rem;
+  }
+
+  .scene-actions {
+    flex-basis: 100%;
+  }
+
+  .scene-actions button[aria-pressed="true"] {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>

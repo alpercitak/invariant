@@ -15,6 +15,7 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     'Fourier drawing',
     'Logistic map',
     'Galton board',
+    'Mandelbrot set',
   ]) {
     const card = page.getByRole('link', { name, exact: true });
     await expect(card.locator('svg')).toBeVisible();
@@ -29,6 +30,37 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     await expect(guide.locator('p')).not.toBeEmpty();
     await page.getByRole('link', { name: 'All exhibits' }).click();
   }
+});
+
+test('Mandelbrot presets and step limit change the map and the center escape result', async ({ page }) => {
+  await page.goto('/exhibits/mandelbrot/');
+  const canvas = page.getByRole('img', { name: 'Mandelbrot escape map' });
+  const probe = page.getByLabel('Center point escape result');
+  const steps = page.getByRole('slider', { name: 'Step limit' });
+  const whole = page.getByRole('button', { name: 'Whole set' });
+  const pixels = () => canvas.evaluate((element: HTMLCanvasElement) => element.toDataURL());
+  await expect(probe).toContainText('no escape in 96 steps');
+  const overview = await pixels();
+
+  const seahorse = page.getByRole('button', { name: 'Seahorse Valley' });
+  await seahorse.press('Enter');
+  await expect(seahorse).toHaveAttribute('aria-pressed', 'true');
+  await expect(whole).toHaveAttribute('aria-pressed', 'false');
+  await expect(probe).toContainText('escapes at step 33');
+  const detail = await pixels();
+  expect(detail).not.toBe(overview);
+
+  await steps.press('Home');
+  await expect(steps).toHaveValue('24');
+  await expect(probe).toContainText('no escape in 24 steps');
+  expect(await pixels()).not.toBe(detail);
+  await steps.press('End');
+  await expect(probe).toContainText('escapes at step 33');
+
+  await page.getByRole('button', { name: 'Miniature' }).click();
+  await expect(probe).toContainText('no escape in 240 steps');
+  await whole.click();
+  await expect(whole).toHaveAttribute('aria-pressed', 'true');
 });
 
 test('Galton board tallies drops and clears the sample when the bias changes', async ({ page }) => {
