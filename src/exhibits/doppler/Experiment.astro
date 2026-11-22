@@ -1,0 +1,49 @@
+---
+import { DEFAULT_SPEED, MAX_SPEED, SPEED_STEP } from './model';
+import { pitchSummary } from './plot';
+import Wavefronts from './Wavefronts.astro';
+---
+
+<section class="scene-panel" aria-label="Doppler effect experiment">
+  <svg id="doppler-plot" class="scene-view" viewBox="-8 -3.65 16 7.3" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Sound wavefronts around a source, shown from above" aria-describedby="doppler-pitch">
+    <Wavefronts />
+  </svg>
+  <div class="scene-toolbar">
+    <div class="scene-controls">
+      <label for="doppler-speed">Source speed</label>
+      <div class="scene-range">
+        <input id="doppler-speed" type="range" min="0" max={MAX_SPEED} step={SPEED_STEP} value={DEFAULT_SPEED} aria-valuetext={`${DEFAULT_SPEED}% of sound speed`} disabled />
+        <span id="doppler-speed-value" aria-hidden="true">{DEFAULT_SPEED}%</span>
+      </div>
+    </div>
+    <div class="scene-actions">
+      <button id="doppler-play" type="button" aria-controls="doppler-plot" disabled>Play</button>
+    </div>
+    <output id="doppler-pitch" class="scene-readout" for="doppler-speed">{pitchSummary(DEFAULT_SPEED)}</output>
+  </div>
+</section>
+
+<script src="./experiment.ts"></script>
+
+<style>
+  svg {
+    aspect-ratio: 16 / 6.25;
+    background: radial-gradient(ellipse at 44% 50%, #23364c, var(--paper) 84%);
+  }
+
+  @media (width <= 480px) {
+    svg {
+      aspect-ratio: 16 / 7.3;
+    }
+  }
+
+  .scene-controls {
+    flex-basis: 18rem;
+  }
+
+  .scene-range span {
+    min-width: 3ch;
+    color: var(--accent);
+    font: 0.8rem / 1.45 var(--mono);
+  }
+</style>

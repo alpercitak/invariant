@@ -1,0 +1,50 @@
+---
+import { DEFAULT_SPEED } from './model';
+import { INITIAL_PHASE, WAVEFRONT_COUNT, wavefrontMark } from './plot';
+
+const wavefronts = Array.from({ length: WAVEFRONT_COUNT }, (_, index) =>
+  wavefrontMark(DEFAULT_SPEED, index, INITIAL_PHASE),
+);
+---
+
+<path class="axis" d="M -8 0 H 8" />
+{wavefronts.map(({ centerX, radius, opacity }) => (
+  <circle data-wavefront cx={centerX} r={radius} opacity={opacity} />
+))}
+<path data-direction d="M 0 0 H 1.25 M 1.02 -0.18 L 1.25 0 L 1.02 0.18" />
+<circle class="source" r="0.19" />
+
+<style>
+  .axis,
+  [data-wavefront],
+  [data-direction] {
+    fill: none;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .axis {
+    stroke: #a9bcd6;
+    stroke-dasharray: 3 5;
+    stroke-opacity: 0.42;
+    stroke-width: 1;
+  }
+
+  [data-wavefront] {
+    stroke: #9ac2ff;
+    stroke-width: 1.2;
+  }
+
+  [data-direction] {
+    stroke: #ffd194;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+  }
+
+  .source {
+    fill: #ffd194;
+    stroke: #271c14;
+    stroke-width: 1.2;
+    vector-effect: non-scaling-stroke;
+  }
+</style>

@@ -25,6 +25,7 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     'Two-body orbits',
     'Birthday paradox',
     'Pythagorean dissection',
+    'Doppler effect',
   ]) {
     const card = page.getByRole('link', { name, exact: true });
     await expect(card.locator('svg')).toBeVisible();
@@ -39,6 +40,37 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     await expect(guide.locator('p')).not.toBeEmpty();
     await page.getByRole('link', { name: 'All exhibits' }).click();
   }
+});
+
+test('Doppler speed changes observed pitch and wavefronts advance only while playing', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/exhibits/doppler/');
+  const speed = page.getByRole('slider', { name: 'Source speed' });
+  const pitch = page.locator('#doppler-pitch');
+  const wavefront = page.locator('#doppler-plot [data-wavefront]').first();
+  const direction = page.locator('#doppler-plot [data-direction]');
+  const play = page.getByRole('button', { name: 'Play', exact: true });
+  await expect(play).toBeVisible();
+  await expect(pitch).toHaveText('Behind 303 Hz · Ahead 800 Hz');
+
+  await speed.press('Home');
+  await expect(speed).toHaveAttribute('aria-valuetext', '0% of sound speed');
+  await expect(pitch).toHaveText('Behind 440 Hz · Ahead 440 Hz');
+  await expect(wavefront).toHaveAttribute('cx', '0');
+  await expect(direction).toHaveAttribute('opacity', '0');
+
+  await speed.press('End');
+  await expect(pitch).toHaveText('Behind 259 Hz · Ahead 1467 Hz');
+  await expect(direction).toHaveAttribute('opacity', '1');
+  await expect(wavefront).not.toHaveAttribute('cx', '0');
+  const initialRadius = await wavefront.getAttribute('r');
+  await play.press('Enter');
+  await expect.poll(() => wavefront.getAttribute('r')).not.toBe(initialRadius);
+  await page.getByRole('button', { name: 'Pause', exact: true }).press('Enter');
+  await expect(play).toBeVisible();
+  const pausedRadius = await wavefront.getAttribute('r');
+  await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  expect(await wavefront.getAttribute('r')).toBe(pausedRadius);
 });
 
 test('Pythagorean dissection updates both arrangements and their areas from the keyboard', async ({ page }) => {

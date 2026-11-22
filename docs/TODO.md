@@ -49,3 +49,4 @@ The [project plan](PLAN.md) tracks the full exhibit roadmap.
 - [x] Give the Fourier legend, controls, and exhibit text more room at desktop and phone widths.
 - [x] Build standing waves with adjustable harmonics, pausable playback, and tests for node positions and frequencies.
 - [x] Build wave interference with adjustable wavelength and relative phase, a midpoint probe, and checks for constructive and destructive interference.
+- [x] Build the Doppler effect with adjustable source speed, pausable wavefronts, and checks for wave spacing and pitch shifts.
