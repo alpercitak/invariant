@@ -1,0 +1,151 @@
+---
+import { DEFAULT_PHASE, DEFAULT_WAVELENGTH, PALETTE, SOURCE_POSITIONS } from './plot';
+
+const wavelengthLabel = `${DEFAULT_WAVELENGTH.toFixed(1)} m`;
+---
+
+<section class="scene-panel" aria-label="Wave interference experiment">
+  <div class="plot">
+    <canvas
+      id="interference-map"
+      class="scene-view"
+      width="504"
+      height="288"
+      role="img"
+      aria-label="Amplitude map of two wave sources, A and B, four meters apart"
+      aria-describedby="interference-legend interference-midpoint"
+    >
+      The map shows bright bands where the waves reinforce each other and dark bands where they nearly or fully cancel.
+    </canvas>
+    {SOURCE_POSITIONS.map((position, index) => (
+      <span class="source" style={`left: ${position * 100}%`} aria-hidden="true">{index === 0 ? 'A' : 'B'}</span>
+    ))}
+    <span class="probe" aria-hidden="true"></span>
+  </div>
+  <div class="plot-key">
+    <ul id="interference-legend" class="scene-legend" aria-label="Plot legend">
+      <li><span style={`background: rgb(${PALETTE[0].join(' ')})`} aria-hidden="true"></span>Cancellation</li>
+      <li><span style={`background: rgb(${PALETTE[255].join(' ')})`} aria-hidden="true"></span>Reinforcement</li>
+    </ul>
+    <output id="interference-midpoint" class="scene-readout">Midpoint amplitude 100%</output>
+  </div>
+  <div class="scene-toolbar">
+    <div class="scene-controls">
+      <div class="parameter">
+        <label for="interference-wavelength">Wavelength</label>
+        <div class="scene-range">
+          <input id="interference-wavelength" type="range" min="0.8" max="3.2" step="0.1" value={DEFAULT_WAVELENGTH} aria-valuetext={wavelengthLabel} />
+          <output id="interference-wavelength-value" for="interference-wavelength" aria-live="off">{wavelengthLabel}</output>
+        </div>
+      </div>
+      <div class="parameter">
+        <label for="interference-phase">Phase of B</label>
+        <div class="scene-range">
+          <input id="interference-phase" type="range" min="0" max="180" step="5" value={DEFAULT_PHASE} aria-valuetext={`${DEFAULT_PHASE} degrees`} />
+          <output id="interference-phase-value" for="interference-phase" aria-live="off">{DEFAULT_PHASE}°</output>
+        </div>
+      </div>
+    </div>
+    <button id="interference-reset" type="button">Reset</button>
+  </div>
+</section>
+
+<script src="./experiment.ts"></script>
+
+<style>
+  .plot,
+  .plot-key,
+  .scene-toolbar {
+    max-width: 50rem;
+    margin-inline: auto;
+  }
+
+  .plot {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.25rem;
+    background: #0a0f1d;
+  }
+
+  canvas.scene-view {
+    height: auto;
+    background: transparent;
+  }
+
+  .source,
+  .probe {
+    position: absolute;
+    top: 50%;
+    border: 1px solid var(--ink);
+    box-shadow: 0 0 0 1px var(--paper);
+    pointer-events: none;
+  }
+
+  .source {
+    display: grid;
+    width: 1.3rem;
+    height: 1.3rem;
+    place-items: center;
+    border-radius: 50%;
+    color: var(--ink);
+    background: var(--paper);
+    font-size: 0.75rem;
+    transform: translate(-50%, -50%);
+  }
+
+  .probe {
+    left: 50%;
+    width: 0.6rem;
+    height: 0.6rem;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  .plot-key {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem 1.2rem;
+    margin-top: 0.85rem;
+  }
+
+  .scene-legend {
+    margin: 0;
+    font-family: inherit;
+    font-size: 0.875rem;
+  }
+
+  .scene-legend span {
+    width: 0.7rem;
+    height: 0.7rem;
+    border: 1px solid var(--muted);
+    border-radius: 0.1rem;
+  }
+
+  .scene-readout {
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .scene-toolbar {
+    align-items: end;
+    margin-top: 1rem;
+  }
+
+  .scene-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+    gap: 0.85rem 1.4rem;
+  }
+
+  .parameter label {
+    display: block;
+    margin-bottom: 0.15rem;
+    font-size: 0.9rem;
+  }
+
+  .scene-range output {
+    min-width: 5ch;
+    text-align: right;
+  }
+</style>

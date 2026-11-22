@@ -29,7 +29,8 @@ Keep TypeScript on 6.x while `astro check` depends on its compiler API.
 7. Add standing waves with a fixed string, adjustable harmonics, and visible nodes.
 8. Add Bézier curves with movable handles and a visible interpolation construction.
 9. Add Conway’s Game of Life with choices of starting pattern and controls for stepping through generations.
-10. Add Monte Carlo estimation of π with point batches, a quarter-circle plot, and a readout that shows sampling error. Add the remaining exhibits individually as their experiments, explanations, and math checks are ready.
+10. Add Monte Carlo estimation of π with point batches, a quarter-circle plot, and a readout that shows sampling error.
+11. Add wave interference with an amplitude map, wavelength and phase controls, and a midpoint probe. Add the remaining exhibits individually as their experiments, explanations, and math checks are ready.
 
 Each exhibit should be checked against a known result, an invariant, or an appropriate numerical or statistical reference. For example, check that uncoupled Kuramoto oscillators follow their natural frequencies and that the Lorenz solver agrees over a short interval when the time step is reduced.
 

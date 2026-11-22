@@ -15,6 +15,7 @@ Invariant is an interactive archive of mathematical patterns. Pick a scene from 
 - [Bézier curves](src/pages/exhibits/bezier.md) lets you move four control points and see how straight-line interpolation produces a smooth curve.
 - [Conway’s Game of Life](src/pages/exhibits/life.md) lets you step through generations and see how one neighbor rule produces still, repeating, and traveling patterns.
 - [Monte Carlo π](src/pages/exhibits/monte-carlo.md) lets you scatter random points and use the share inside a quarter circle to estimate π.
+- [Wave interference](src/pages/exhibits/interference.md) lets you change the wavelength and phase of two sources to see where they reinforce and cancel.
 
 ## Run locally
 

@@ -20,6 +20,7 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     'Bézier curves',
     'Conway’s Game of Life',
     'Monte Carlo π',
+    'Wave interference',
   ]) {
     const card = page.getByRole('link', { name, exact: true });
     await expect(card.locator('svg')).toBeVisible();
@@ -34,6 +35,34 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     await expect(guide.locator('p')).not.toBeEmpty();
     await page.getByRole('link', { name: 'All exhibits' }).click();
   }
+});
+
+test('wave interference reaches midpoint cancellation and resets the amplitude map', async ({ page }) => {
+  await page.goto('/exhibits/interference/');
+  const wavelength = page.getByRole('slider', { name: 'Wavelength' });
+  const phase = page.getByRole('slider', { name: 'Phase of B' });
+  const midpoint = page.locator('#interference-midpoint');
+  const plot = page.locator('#interference-map');
+  const image = () => plot.evaluate((canvas: HTMLCanvasElement) => canvas.toDataURL());
+  await expect(midpoint).toHaveText('Midpoint amplitude 100%');
+  const initialImage = await image();
+
+  await phase.press('End');
+  await expect(phase).toHaveAttribute('aria-valuetext', '180 degrees');
+  await expect(midpoint).toHaveText('Midpoint amplitude 0%');
+  const cancellingImage = await image();
+  expect(cancellingImage).not.toBe(initialImage);
+
+  await wavelength.press('Home');
+  await expect(wavelength).toHaveAttribute('aria-valuetext', '0.8 m');
+  await expect(midpoint).toHaveText('Midpoint amplitude 0%');
+  expect(await image()).not.toBe(cancellingImage);
+
+  await page.getByRole('button', { name: 'Reset' }).press('Enter');
+  await expect(wavelength).toHaveValue('1.4');
+  await expect(phase).toHaveValue('0');
+  await expect(midpoint).toHaveText('Midpoint amplitude 100%');
+  expect(await image()).toBe(initialImage);
 });
 
 test('Monte Carlo π accumulates sample batches and clears the plot on reset', async ({ page }) => {

@@ -1,0 +1,37 @@
+---
+import { relativeAmplitude } from './model';
+import { DEFAULT_PHASE, DEFAULT_WAVELENGTH, PALETTE, pathDifferenceMap, SOURCE_POSITIONS } from './plot';
+
+const width = 112;
+const height = 64;
+const bands = 20;
+const pixels = pathDifferenceMap(width, height).map((distance) => {
+  return Math.round(relativeAmplitude(distance, DEFAULT_WAVELENGTH, DEFAULT_PHASE) * (bands - 1));
+});
+const paths = Array.from({ length: bands }, () => '');
+
+for (let row = 0; row < height; row += 1) {
+  let start = 0;
+  while (start < width) {
+    const band = pixels[row * width + start];
+    let end = start + 1;
+    while (end < width && pixels[row * width + end] === band) end += 1;
+    paths[band] += `M${start} ${row}h${end - start}v1H${start}z`;
+    start = end;
+  }
+}
+---
+
+<svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="interference-preview-smoothing">
+      <feGaussianBlur stdDeviation="0.45" />
+    </filter>
+  </defs>
+  <g shape-rendering="crispEdges" filter="url(#interference-preview-smoothing)">
+    {paths.map((path, band) => <path d={path} fill={`rgb(${PALETTE[Math.round((band / (bands - 1)) * 255)].join(' ')})`} />)}
+  </g>
+  {SOURCE_POSITIONS.map((position) => (
+    <circle cx={position * width} cy={height / 2} r="1.5" fill="var(--paper)" stroke="var(--ink)" stroke-width="0.3" />
+  ))}
+</svg>
