@@ -23,6 +23,7 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     'Wave interference',
     'Sierpiński triangle',
     'Two-body orbits',
+    'Birthday paradox',
   ]) {
     const card = page.getByRole('link', { name, exact: true });
     await expect(card.locator('svg')).toBeVisible();
@@ -37,6 +38,37 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     await expect(guide.locator('p')).not.toBeEmpty();
     await page.getByRole('link', { name: 'All exhibits' }).click();
   }
+});
+
+test('birthday groups cross the 50% threshold and can be redrawn independently', async ({ page }) => {
+  await page.goto('/exhibits/birthday/');
+  const size = page.getByRole('slider', { name: 'People' });
+  const probability = page.locator('#birthday-probability');
+  const summary = page.locator('#birthday-sample');
+  const calendar = page.getByRole('img', { name: /^A calendar/ });
+  await expect(size).toHaveValue('23');
+  await expect(probability).toHaveText('50.7%');
+  await expect(summary).toHaveText('This group shares Oct 29');
+  await expect(calendar.locator('[data-count="2"]')).toHaveCount(1);
+
+  await size.press('ArrowLeft');
+  await expect(probability).toHaveText('47.6%');
+  await size.press('ArrowRight');
+  await expect(summary).toHaveText('This group shares Oct 29');
+  await size.press('Home');
+  await expect(probability).toHaveText('0%');
+  await expect(summary).toHaveText('No shared dates in this group');
+  await expect(calendar.locator('[data-count="1"]')).toHaveCount(1);
+
+  await size.press('End');
+  await expect(probability).toHaveText('99.4%');
+  await page.evaluate(() => {
+    Math.random = () => 0.5;
+  });
+  await page.getByRole('button', { name: 'Draw new group' }).press('Enter');
+  await expect(summary).toHaveText('This group shares Jul 2');
+  await expect(calendar.locator('[data-count="60"]')).toHaveCount(1);
+  await expect(probability).toHaveText('99.4%');
 });
 
 test('two-body orbits respond to mass ratio changes and support pausing and resetting', async ({ page }) => {

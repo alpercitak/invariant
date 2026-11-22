@@ -1,0 +1,64 @@
+---
+import { birthdayCounts } from './model';
+import { CALENDAR_DAYS, MONTHS } from './plot';
+
+interface Props {
+  birthdays: number[];
+  preview?: boolean;
+}
+
+const { birthdays, preview = false } = Astro.props;
+const counts = birthdayCounts(birthdays);
+const monthY = (row: number) => 48 + row * 20;
+const dayX = (column: number) => 63 + column * 16;
+---
+
+<svg
+  class:list={[{ 'scene-view': !preview }]}
+  viewBox={preview ? '0 0 560 320' : '0 0 560 285'}
+  role={preview ? undefined : 'img'}
+  aria-hidden={preview ? 'true' : undefined}
+  aria-label={preview ? undefined : 'A calendar with one dot per date. Bright dots mark one birthday, and rings mark dates shared by two or more people.'}
+  aria-describedby={preview ? undefined : 'birthday-sample'}
+>
+  <g transform={preview ? 'translate(-23 -5) scale(1 0.9)' : undefined}>
+    {!preview && (
+      <g class="labels">
+        {[1, 10, 20, 31].map((day) => <text x={dayX(day - 1)} y="23" text-anchor="middle">{day}</text>)}
+        {MONTHS.map(([month], row) => <text x="9" y={monthY(row)} dominant-baseline="central">{month}</text>)}
+      </g>
+    )}
+    {CALENDAR_DAYS.map(({ row, column }, index) => (
+      <circle class="day" cx={dayX(column)} cy={monthY(row)} r="4.5" data-count={counts[index]} />
+    ))}
+  </g>
+</svg>
+
+<style>
+  .labels {
+    fill: var(--muted);
+    font: 18px var(--mono);
+  }
+
+  .day {
+    fill: none;
+    stroke: var(--birthday-shared, #ffd084);
+    stroke-width: 2.8;
+  }
+
+  .day[data-count="0"] {
+    fill: #384c54;
+    stroke: none;
+  }
+
+  .day[data-count="1"] {
+    fill: var(--birthday-single, #80e1ce);
+    stroke: none;
+  }
+
+  @media (width <= 480px) {
+    .labels {
+      font-size: 24px;
+    }
+  }
+</style>

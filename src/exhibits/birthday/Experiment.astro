@@ -1,0 +1,93 @@
+---
+import CalendarPlot from './CalendarPlot.astro';
+import { birthdayCounts, sharedBirthdayProbability } from './model';
+import { INITIAL_GROUP_SIZE, MAX_GROUP_SIZE, percent, sharedDates, startingGroup } from './plot';
+
+const birthdays = startingGroup().slice(0, INITIAL_GROUP_SIZE);
+---
+
+<section id="birthday-experiment" class="scene-panel" aria-label="Birthday paradox experiment">
+  <div class="calendar-view">
+    <CalendarPlot {birthdays} />
+  </div>
+  <ul class="scene-legend" aria-label="Calendar legend">
+    <li><span class="single" aria-hidden="true"></span>One birthday</li>
+    <li><span class="shared" aria-hidden="true"></span>Shared birthday</li>
+  </ul>
+  <div class="scene-toolbar">
+    <div class="scene-controls">
+      <label for="birthday-size">People</label>
+      <div class="scene-range">
+        <input id="birthday-size" type="range" min="1" max={MAX_GROUP_SIZE} step="1" value={INITIAL_GROUP_SIZE} disabled />
+        <output id="birthday-size-value" for="birthday-size" aria-live="off">{INITIAL_GROUP_SIZE}</output>
+      </div>
+    </div>
+    <button id="birthday-draw" type="button" disabled>Draw new group</button>
+  </div>
+  <div class="results">
+    <output for="birthday-size">
+      <strong id="birthday-probability">{percent.format(sharedBirthdayProbability(INITIAL_GROUP_SIZE))}</strong>
+      chance of a shared birthday
+    </output>
+    <output id="birthday-sample" for="birthday-size birthday-draw" class="scene-readout">{sharedDates(birthdayCounts(birthdays))}</output>
+  </div>
+</section>
+
+<script src="./experiment.ts"></script>
+
+<style>
+  .scene-panel {
+    --birthday-single: #80e1ce;
+    --birthday-shared: #ffd084;
+  }
+
+  .calendar-view {
+    border-radius: 0.2rem;
+    background: radial-gradient(ellipse at 50% 45%, #1d3338, var(--paper) 78%);
+  }
+
+  .calendar-view :global(svg) {
+    max-width: 55rem;
+    margin-inline: auto;
+    background: transparent;
+  }
+
+  .scene-legend span {
+    width: 0.5rem;
+    height: 0.5rem;
+    border: 0;
+    border-radius: 50%;
+  }
+
+  .scene-legend .single {
+    background: var(--birthday-single);
+  }
+
+  .scene-legend .shared {
+    border: 1.5px solid var(--birthday-shared);
+  }
+
+  .scene-controls {
+    flex-basis: 15rem;
+  }
+
+  .results {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.32rem 1rem;
+    margin-top: 0.95rem;
+    padding-top: 0.65rem;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .results strong {
+    margin-right: 0.3rem;
+    color: var(--birthday-shared);
+    font-size: 1.15rem;
+    font-variant-numeric: tabular-nums;
+  }
+</style>

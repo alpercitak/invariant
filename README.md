@@ -18,6 +18,7 @@ Invariant is an interactive archive of mathematical patterns. Pick a scene from 
 - [Wave interference](src/pages/exhibits/interference.md) lets you change the wavelength and phase of two sources to see where they reinforce and cancel.
 - [Sierpiński triangle](src/pages/exhibits/sierpinski.md) lets you remove the middle of each triangle and track how much area remains.
 - [Two-body orbits](src/pages/exhibits/orbits.md) lets you change the mass ratio of two bodies to see how they move around a shared center of mass.
+- [Birthday paradox](src/pages/exhibits/birthday.md) lets you draw groups of different sizes and see how quickly the chance of a shared birthday rises.
 
 ## Run locally
 
