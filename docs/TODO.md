@@ -33,6 +33,7 @@ The [project plan](PLAN.md) tracks the full exhibit roadmap.
 ## Probability
 
 - [x] Build the Galton board with single and batch drops, adjustable bias, and tests for the fair binomial distribution and biased mean.
+- [x] Build Monte Carlo π with batch sampling, a running estimate and absolute error, and tests for classification and the area-based estimate.
 
 ## Waves and signals
 

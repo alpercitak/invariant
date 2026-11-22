@@ -19,6 +19,7 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     'Standing waves',
     'Bézier curves',
     'Conway’s Game of Life',
+    'Monte Carlo π',
   ]) {
     const card = page.getByRole('link', { name, exact: true });
     await expect(card.locator('svg')).toBeVisible();
@@ -33,6 +34,38 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     await expect(guide.locator('p')).not.toBeEmpty();
     await page.getByRole('link', { name: 'All exhibits' }).click();
   }
+});
+
+test('Monte Carlo π accumulates sample batches and clears the plot on reset', async ({ page }) => {
+  await page.goto('/exhibits/monte-carlo/');
+  await page.evaluate(() => {
+    const coordinates = [0.5, 0.5, 0.9, 0.9, 0.5, 0.5, 0.5, 0.5];
+    let index = 0;
+    Math.random = () => coordinates[index++ % coordinates.length];
+  });
+  const plot = page.locator('#monte-carlo-points');
+  const plotImage = () => plot.evaluate((canvas: HTMLCanvasElement) => canvas.toDataURL());
+  const empty = await plotImage();
+  const count = page.locator('#monte-carlo-count');
+  const estimate = page.locator('#monte-carlo-estimate');
+  const error = page.locator('#monte-carlo-error');
+  await expect(estimate).toHaveText('—');
+
+  await page.getByRole('button', { name: 'Add 10', exact: true }).press('Enter');
+  await expect(count).toHaveText('7 / 10');
+  await expect(estimate).toHaveText('2.80000');
+  await expect(error).toHaveText('0.342');
+  expect(await plotImage()).not.toBe(empty);
+
+  await page.getByRole('button', { name: 'Add 100', exact: true }).click();
+  await page.getByRole('button', { name: 'Add 1,000', exact: true }).click();
+  await expect(count).toHaveText('832 / 1,110');
+
+  await page.getByRole('button', { name: 'Reset' }).press('Enter');
+  await expect(count).toHaveText('0 / 0');
+  await expect(estimate).toHaveText('—');
+  await expect(error).toHaveText('—');
+  expect(await plotImage()).toBe(empty);
 });
 
 test('Game of Life steps, plays, and resets the selected pattern', async ({ page }) => {

@@ -1,0 +1,38 @@
+---
+import { MARGIN, PLOT_SIZE, SIDE } from './plot';
+
+interface Props {
+  preview?: boolean;
+}
+
+const { preview = false } = Astro.props;
+const edge = PLOT_SIZE - MARGIN;
+const arc = `M ${edge} ${edge} A ${SIDE} ${SIDE} 0 0 0 ${MARGIN} ${MARGIN}`;
+const grid = [0.25, 0.5, 0.75].map((fraction) => MARGIN + fraction * SIDE);
+---
+
+<svg viewBox={preview ? '-290 -12 1220 700' : `0 0 ${PLOT_SIZE} ${PLOT_SIZE}`} aria-hidden="true">
+  <path d={`${arc} V ${edge} Z`} fill="var(--secondary)" fill-opacity="0.09" />
+  <g fill="none" stroke="var(--line)">
+    {grid.map((line) => <path d={`M ${line} ${MARGIN} V ${edge} M ${MARGIN} ${line} H ${edge}`} />)}
+    <rect x={MARGIN} y={MARGIN} width={SIDE} height={SIDE} stroke-width="2" />
+  </g>
+  <path d={arc} fill="none" stroke="var(--secondary)" stroke-width="3" />
+  <slot />
+  {!preview && (
+    <g fill="var(--muted)" font-size="25" text-anchor="middle">
+      <text x={MARGIN} y={edge + 34}>0</text>
+      <text x={edge} y={edge + 34}>1</text>
+      <text x={MARGIN - 25} y={MARGIN + 8}>1</text>
+      <text x={PLOT_SIZE / 2} y={edge + 34}>x</text>
+      <text x={MARGIN - 25} y={PLOT_SIZE / 2 + 8}>y</text>
+    </g>
+  )}
+</svg>
+
+<style>
+  svg {
+    display: block;
+    width: 100%;
+  }
+</style>

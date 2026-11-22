@@ -1,0 +1,21 @@
+---
+import { samplePoint } from './model';
+import { plotPosition } from './plot';
+import SquarePlot from './SquarePlot.astro';
+
+let seed = 29;
+const random = () => {
+  seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+  return seed / 2 ** 32;
+};
+const points = Array.from({ length: 460 }, () => samplePoint(random));
+---
+
+<SquarePlot preview>
+  {points.map((point) => {
+    const [cx, cy] = plotPosition(point).map((coordinate) => coordinate.toFixed(1));
+    return point.inside
+      ? <circle cx={cx} cy={cy} r="3.6" fill="var(--secondary)" />
+      : <circle cx={cx} cy={cy} r="4.4" fill="none" stroke="var(--accent)" stroke-width="2.4" />;
+  })}
+</SquarePlot>

@@ -1,0 +1,117 @@
+---
+import { PLOT_SIZE } from './plot';
+import SquarePlot from './SquarePlot.astro';
+
+const batches = [10, 100, 1_000];
+---
+
+<section class="scene-panel" aria-label="Monte Carlo π experiment">
+  <div class="plot" role="img" aria-label="Unit square with a quarter circle centered at its bottom-left corner">
+    <SquarePlot />
+    <canvas id="monte-carlo-points" width={PLOT_SIZE} height={PLOT_SIZE} aria-hidden="true"></canvas>
+  </div>
+  <div class="scene-toolbar">
+    <ul class="scene-legend" aria-label="Plot legend">
+      <li><span class="inside" aria-hidden="true"></span>Inside the arc</li>
+      <li><span class="outside" aria-hidden="true"></span>Outside the arc</li>
+    </ul>
+    <div class="scene-actions">
+      {batches.map((batch) => (
+        <button type="button" name="monte-carlo-add" value={batch}>Add {batch.toLocaleString('en-US')}</button>
+      ))}
+      <button id="monte-carlo-reset" type="button">Reset</button>
+    </div>
+    <output id="monte-carlo-result" aria-label="Sampling result">
+      <span><span class="label">π estimate</span> <strong id="monte-carlo-estimate">—</strong></span>
+      <span><span class="label">Inside / total</span> <strong id="monte-carlo-count">0 / 0</strong></span>
+      <span><span class="label">Absolute error</span> <strong id="monte-carlo-error">—</strong></span>
+    </output>
+  </div>
+</section>
+
+<script src="./experiment.ts"></script>
+
+<style>
+  .scene-panel {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: 1.1rem clamp(1.4rem, 4vw, 3.25rem);
+    background: radial-gradient(ellipse at 27% 24%, #203330, var(--panel) 70%);
+  }
+
+  .plot {
+    position: relative;
+    width: min(100%, 34rem);
+    margin-inline: auto;
+    border: 1px solid var(--line);
+    border-radius: 0.25rem;
+    background: var(--paper);
+  }
+
+  canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .scene-toolbar {
+    justify-content: start;
+    gap: 0.9rem;
+    margin: 0;
+  }
+
+  .scene-legend {
+    gap: 0.45rem 1.25rem;
+    margin: 0;
+    font-family: inherit;
+    font-size: 0.875rem;
+  }
+
+  .scene-legend span {
+    width: 0.6rem;
+    height: 0.6rem;
+    border: 1.5px solid var(--accent);
+    border-radius: 50%;
+  }
+
+  .scene-legend .inside {
+    border-color: var(--secondary);
+    background: var(--secondary);
+  }
+
+  output {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem 1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--line);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .label {
+    display: block;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  output > span:first-child {
+    grid-column: 1 / -1;
+  }
+
+  #monte-carlo-estimate {
+    display: inline-block;
+    color: var(--accent);
+    font-size: clamp(1.65rem, 4vw, 2.75rem);
+    font-weight: 500;
+    line-height: 1.15;
+  }
+
+  @media (width >= 750px) {
+    .scene-panel {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    }
+  }
+</style>

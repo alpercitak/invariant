@@ -14,6 +14,7 @@ Invariant is an interactive archive of mathematical patterns. Pick a scene from 
 - [Standing waves](src/pages/exhibits/standing-waves.md) lets you change a string’s harmonic and see which points stay still as it vibrates.
 - [Bézier curves](src/pages/exhibits/bezier.md) lets you move four control points and see how straight-line interpolation produces a smooth curve.
 - [Conway’s Game of Life](src/pages/exhibits/life.md) lets you step through generations and see how one neighbor rule produces still, repeating, and traveling patterns.
+- [Monte Carlo π](src/pages/exhibits/monte-carlo.md) lets you scatter random points and use the share inside a quarter circle to estimate π.
 
 ## Run locally
 
