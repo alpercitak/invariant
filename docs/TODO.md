@@ -14,6 +14,7 @@ The [project plan](PLAN.md) tracks the full exhibit roadmap.
 - [x] Put the gallery first and generate each card's scene from its model.
 - [x] Put the visualization first on exhibit pages and add optional reading guidance.
 - [x] Configure GitHub Actions for project and Chromium checks and monthly Dependabot updates for Bun packages and actions.
+- [x] Upgrade to Astro 7 and pin its supported Node.js version for CI and Cloudflare Pages.
 - [ ] Deploy to Cloudflare Pages and verify the archive and exhibit URLs.
 
 ## Dynamics
