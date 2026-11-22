@@ -23,7 +23,8 @@ The homepage opens on a gallery of titled scenes. Each exhibit supplies a model-
 5. Open the probability collection with a Galton board that compares observed and predicted bin shares.
 6. Open the fractal collection with the Mandelbrot set. Use close-ups and a step limit to show how the rendered boundary depends on sampling.
 7. Add standing waves with a fixed string, adjustable harmonics, and visible nodes.
-8. Add Bézier curves with movable handles and a visible interpolation construction. Add the remaining exhibits individually as their experiments, explanations, and math checks are ready.
+8. Add Bézier curves with movable handles and a visible interpolation construction.
+9. Add Conway’s Game of Life with choices of starting pattern and controls for stepping through generations. Add the remaining exhibits individually as their experiments, explanations, and math checks are ready.
 
 Each exhibit should be checked against a known result, an invariant, or an appropriate numerical or statistical reference. For example, check that uncoupled Kuramoto oscillators follow their natural frequencies and that the Lorenz solver agrees over a short interval when the time step is reduced.
 

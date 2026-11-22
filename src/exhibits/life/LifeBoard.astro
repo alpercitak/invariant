@@ -1,0 +1,32 @@
+---
+import { GRID_HEIGHT, GRID_WIDTH, nextGeneration, seedBoard } from './model';
+import { boardFrame, CELL_SIZE, HEIGHT, WIDTH } from './plot';
+import { PATTERNS } from './presets';
+
+interface Props {
+  preview?: boolean;
+}
+
+const { preview = false } = Astro.props;
+const initial = seedBoard(PATTERNS[0].cells);
+const frame = boardFrame(preview ? nextGeneration(initial) : initial, initial);
+const grid = [
+  ...Array.from({ length: GRID_WIDTH + 1 }, (_, column) => `M${column * CELL_SIZE} 0V${HEIGHT}`),
+  ...Array.from({ length: GRID_HEIGHT + 1 }, (_, row) => `M0 ${row * CELL_SIZE}H${WIDTH}`),
+].join('');
+---
+
+<svg
+  class:list={{ 'scene-view': !preview }}
+  viewBox={preview ? '-155 -16 838 478.9' : `0 0 ${WIDTH} ${HEIGHT}`}
+  aria-hidden={preview ? 'true' : undefined}
+  role={preview ? undefined : 'img'}
+  aria-label={preview ? undefined : 'Game of Life board'}
+  aria-describedby={preview ? undefined : 'life-result life-description'}
+  focusable="false"
+>
+  {!preview && <desc id="life-description">{frame.description}</desc>}
+  <path d={grid} stroke="var(--line)" stroke-opacity="0.68" fill="none" vector-effect="non-scaling-stroke" />
+  <path id={preview ? undefined : 'life-live'} d={frame.live} fill="var(--secondary)" />
+  <path id={preview ? undefined : 'life-born'} d={frame.born} fill="var(--accent)" />
+</svg>

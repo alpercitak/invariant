@@ -1,0 +1,90 @@
+---
+import LifeBoard from './LifeBoard.astro';
+import { boardReadout } from './plot';
+import { PATTERNS } from './presets';
+---
+
+<section class="scene-panel" aria-label="Game of Life experiment">
+  <div class="board">
+    <LifeBoard />
+  </div>
+  <ul class="scene-legend" aria-label="Plot legend">
+    <li><span class="birth" aria-hidden="true"></span>New this generation</li>
+    <li><span class="live" aria-hidden="true"></span>Other live cells</li>
+  </ul>
+  <div class="scene-toolbar">
+    <div class="scene-actions">
+      <label for="life-pattern">Pattern</label>
+      <select id="life-pattern">
+        {PATTERNS.map(({ name }) => <option>{name}</option>)}
+      </select>
+    </div>
+    <div class="scene-actions">
+      <button id="life-step" type="button">Step</button>
+      <button id="life-play" type="button">Play</button>
+      <button id="life-reset" type="button">Reset</button>
+    </div>
+    <p id="life-result" class="scene-readout">{boardReadout(0, PATTERNS[0].cells.length, 0)}</p>
+    <output id="life-announcement" class="visually-hidden"></output>
+  </div>
+</section>
+
+<script src="./experiment.ts"></script>
+
+<style>
+  .board {
+    padding: clamp(0.3rem, 1.3vw, 1.1rem);
+    border-radius: 0.2rem;
+    background: var(--paper);
+  }
+
+  .board :global(svg) {
+    max-width: 37rem;
+    margin-inline: auto;
+  }
+
+  .scene-legend {
+    gap: 0.65rem 1.3rem;
+    margin-top: 1rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+  }
+
+  .scene-legend span {
+    width: 0.6rem;
+    height: 0.6rem;
+    border: 0;
+    background: var(--accent);
+  }
+
+  .scene-legend .live {
+    background: var(--secondary);
+  }
+
+  .scene-legend .birth {
+    transform: rotate(45deg);
+  }
+
+  .scene-toolbar {
+    row-gap: 0.85rem;
+    margin-top: 1.1rem;
+  }
+
+  select {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: 0.25rem;
+    color: var(--ink);
+    background: var(--paper);
+    font: inherit;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>

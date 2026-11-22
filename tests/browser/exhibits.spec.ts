@@ -18,6 +18,7 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     'Mandelbrot set',
     'Standing waves',
     'Bézier curves',
+    'Conway’s Game of Life',
   ]) {
     const card = page.getByRole('link', { name, exact: true });
     await expect(card.locator('svg')).toBeVisible();
@@ -32,6 +33,38 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     await expect(guide.locator('p')).not.toBeEmpty();
     await page.getByRole('link', { name: 'All exhibits' }).click();
   }
+});
+
+test('Game of Life steps, plays, and resets the selected pattern', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/exhibits/life/');
+  const pattern = page.getByRole('combobox', { name: 'Pattern' });
+  const step = page.getByRole('button', { name: 'Step' });
+  const play = page.getByRole('button', { name: 'Play' });
+  const result = page.locator('#life-result');
+  const board = page.getByRole('img', { name: 'Game of Life board' });
+  await expect(play).toBeVisible();
+  await expect(result).toHaveText('Generation 0 · 48 live · 0 new');
+  await step.press('Enter');
+  await expect(result).toContainText('Generation 1 · 56 live');
+  await expect(board).toHaveAccessibleDescription(/New cells by row/);
+
+  await pattern.selectOption({ label: 'Glider' });
+  await expect(play).toBeVisible();
+  await expect(result).toHaveText('Generation 0 · 5 live · 0 new');
+  await expect(board).toHaveAccessibleDescription(/row 5, columns 8/);
+  for (let generation = 0; generation < 4; generation += 1) await step.press('Enter');
+  await expect(result).toHaveText('Generation 4 · 5 live · 2 new');
+  await expect(board).toHaveAccessibleDescription(/row 6, columns 9/);
+
+  await play.press('Enter');
+  await expect(result).not.toContainText('Generation 4 ·');
+  await page.getByRole('button', { name: 'Pause' }).press('Enter');
+  await expect(play).toBeVisible();
+  await page.getByRole('button', { name: 'Reset' }).click();
+  await expect(pattern).toHaveValue('Glider');
+  await expect(result).toHaveText('Generation 0 · 5 live · 0 new');
+  await expect(board).toHaveAccessibleDescription(/row 5, columns 8/);
 });
 
 test('Bézier controls reshape the curve and the parameter reaches both endpoints', async ({ page }) => {
