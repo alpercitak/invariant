@@ -30,6 +30,7 @@ const order = new Map(
     'monte-carlo',
     'interference',
     'sierpinski',
+    'orbits',
   ].map((slug, index) => [slug, index]),
 );
 const exhibits = entries.sort((a, b) => (order.get(a.slug) ?? order.size) - (order.get(b.slug) ?? order.size));
@@ -133,6 +134,10 @@ const exhibits = entries.sort((a, b) => (order.get(a.slug) ?? order.size) - (ord
 
   .card[data-exhibit="sierpinski"] {
     --scene-glow: #3e2a26;
+  }
+
+  .card[data-exhibit="orbits"] {
+    --scene-glow: #25334d;
   }
 
   .card:hover,

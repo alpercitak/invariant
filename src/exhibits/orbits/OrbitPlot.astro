@@ -1,0 +1,59 @@
+---
+import { INITIAL_PHASE, INITIAL_RATIO, ORIGIN, orbitEllipses, plotPositions } from './plot';
+
+interface Props {
+  preview?: boolean;
+}
+
+const { preview = false } = Astro.props;
+const ratio = preview ? 2 : INITIAL_RATIO;
+const ellipses = orbitEllipses(ratio);
+const positions = plotPositions(ratio, INITIAL_PHASE);
+const bodies = [
+  { key: 'a', ellipse: ellipses.a, position: positions.a },
+  { key: 'b', ellipse: ellipses.b, position: positions.b },
+];
+---
+
+<svg
+  id={preview ? undefined : 'orbits-plot'}
+  class:list={[{ 'scene-view': !preview }]}
+  viewBox="0 0 560 314"
+  role={preview ? undefined : 'img'}
+  aria-hidden={preview ? 'true' : undefined}
+  aria-label={preview ? undefined : 'Two elliptical orbits with the shared center of mass marked by a cross'}
+  aria-describedby={preview ? undefined : 'orbits-summary'}
+>
+  <g transform={preview ? 'translate(28 -14) scale(0.9)' : undefined}>
+    {bodies.map(({ key, ellipse }) => (
+      <ellipse data-orbit-track={key} class={key} {...ellipse} cy={ORIGIN.y} fill="none" stroke="currentColor" stroke-width="1.35" stroke-dasharray={key === 'a' ? '5 3' : undefined} opacity="0.62" />
+    ))}
+    <line
+      data-orbit-link
+      x1={positions.a.x}
+      y1={positions.a.y}
+      x2={positions.b.x}
+      y2={positions.b.y}
+      stroke="#b1bdcb"
+      stroke-opacity="0.55"
+      stroke-dasharray="2 5"
+    />
+    {bodies.map(({ key, position }) => (
+      <g data-orbit-body={key} class={key} transform={`translate(${position.x} ${position.y})`}>
+        <circle r="11" fill="currentColor" opacity="0.1" />
+        <circle r="6" fill={key === 'a' ? '#1b2435' : 'currentColor'} stroke="currentColor" stroke-width="1.6" />
+      </g>
+    ))}
+    <path d="M-5 0H5M0-5V5" transform={`translate(${ORIGIN.x} ${ORIGIN.y})`} stroke="#e5edf8" stroke-width="1.5" />
+  </g>
+</svg>
+
+<style>
+  .a {
+    color: var(--orbit-a, #a0beff);
+  }
+
+  .b {
+    color: var(--orbit-b, #ffcf88);
+  }
+</style>

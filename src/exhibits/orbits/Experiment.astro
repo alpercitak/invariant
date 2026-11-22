@@ -1,0 +1,78 @@
+---
+import OrbitPlot from './OrbitPlot.astro';
+import { INITIAL_RATIO, MAX_RATIO, orbitSummary } from './plot';
+---
+
+<section class="scene-panel" aria-label="Two-body orbit experiment">
+  <div class="orbit-view">
+    <OrbitPlot />
+  </div>
+  <ul class="scene-legend" aria-label="Plot legend">
+    <li><span class="body a" aria-hidden="true"></span>Body A</li>
+    <li><span class="body b" aria-hidden="true"></span>Body B</li>
+    <li><span class="center" aria-hidden="true">+</span>Shared center of mass</li>
+  </ul>
+  <div class="scene-toolbar">
+    <div class="scene-controls">
+      <label for="orbits-ratio">Mass ratio A:B</label>
+      <div class="scene-range">
+        <input id="orbits-ratio" type="range" min="1" max={MAX_RATIO} step="1" value={INITIAL_RATIO} aria-valuetext={`${INITIAL_RATIO} to 1`} disabled />
+        <output id="orbits-ratio-value" for="orbits-ratio" aria-live="off">{INITIAL_RATIO}:1</output>
+      </div>
+    </div>
+    <div class="scene-actions">
+      <button id="orbits-play" type="button" aria-controls="orbits-plot" disabled>Play</button>
+      <button id="orbits-reset" type="button" aria-controls="orbits-plot" disabled>Reset</button>
+    </div>
+    <output id="orbits-summary" class="scene-readout" for="orbits-ratio">{orbitSummary(INITIAL_RATIO)}</output>
+  </div>
+</section>
+
+<script src="./experiment.ts"></script>
+
+<style>
+  .scene-panel {
+    --orbit-a: #a0beff;
+    --orbit-b: #ffcf88;
+  }
+
+  .orbit-view {
+    border-radius: 0.2rem;
+    background: radial-gradient(ellipse at 50% 48%, #222b43, var(--paper) 73%);
+  }
+
+  .orbit-view :global(svg) {
+    max-width: 55rem;
+    margin-inline: auto;
+    background: transparent;
+  }
+
+  .scene-controls {
+    flex-basis: 19rem;
+  }
+
+  .scene-range output {
+    white-space: nowrap;
+  }
+
+  .scene-legend .body {
+    width: 0.45rem;
+    height: 0.45rem;
+    border: 0;
+    border-radius: 50%;
+  }
+
+  .scene-legend .a {
+    border: 1.5px solid var(--orbit-a);
+  }
+
+  .b {
+    background: var(--orbit-b);
+  }
+
+  .scene-legend .center {
+    width: auto;
+    border: 0;
+    color: var(--ink);
+  }
+</style>

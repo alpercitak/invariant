@@ -22,6 +22,7 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     'Monte Carlo π',
     'Wave interference',
     'Sierpiński triangle',
+    'Two-body orbits',
   ]) {
     const card = page.getByRole('link', { name, exact: true });
     await expect(card.locator('svg')).toBeVisible();
@@ -36,6 +37,43 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     await expect(guide.locator('p')).not.toBeEmpty();
     await page.getByRole('link', { name: 'All exhibits' }).click();
   }
+});
+
+test('two-body orbits respond to mass ratio changes and support pausing and resetting', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/exhibits/orbits/');
+  const ratio = page.getByRole('slider', { name: 'Mass ratio A:B' });
+  const trackA = page.locator('[data-orbit-track="a"]');
+  const trackB = page.locator('[data-orbit-track="b"]');
+  const body = page.locator('[data-orbit-body="a"]');
+  const summary = page.locator('#orbits-summary');
+  const play = page.getByRole('button', { name: 'Play' });
+  await expect(play).toBeEnabled();
+  const initialPosition = await body.getAttribute('transform');
+  expect(initialPosition).toBeTruthy();
+
+  await ratio.press('Home');
+  await expect(summary).toHaveText('Equal-size orbits');
+  expect(await trackA.getAttribute('rx')).toBe(await trackB.getAttribute('rx'));
+  await ratio.press('End');
+  await expect(ratio).toHaveAttribute('aria-valuetext', '10 to 1');
+  await expect(summary).toHaveText('B’s orbit is 10× as wide as A’s');
+  expect(Number(await trackB.getAttribute('rx')) / Number(await trackA.getAttribute('rx'))).toBeCloseTo(10);
+
+  const beforePlay = await body.getAttribute('transform');
+  await play.press('Enter');
+  await expect.poll(() => body.getAttribute('transform')).not.toBe(beforePlay);
+  await page.getByRole('button', { name: 'Pause' }).press('Enter');
+  const afterPause = await body.getAttribute('transform');
+  await page.evaluate(
+    () => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))),
+  );
+  expect(await body.getAttribute('transform')).toBe(afterPause);
+
+  await page.getByRole('button', { name: 'Reset' }).press('Enter');
+  await expect(ratio).toHaveValue('3');
+  await expect(play).toBeEnabled();
+  expect(await body.getAttribute('transform')).toBe(initialPosition);
 });
 
 test('Sierpiński subdivision changes the visible pieces and reports their area', async ({ page }) => {

@@ -23,6 +23,7 @@ The [project plan](PLAN.md) tracks the full exhibit roadmap.
 ## Dynamics
 
 - [x] Build the logistic map exhibit with a bifurcation diagram, growth presets, and model checks for a steady value and a two-generation cycle.
+- [x] Build two-body orbits with an adjustable mass ratio, pausable motion, and checks for orbital timing and the center of mass.
 
 ## Geometry
 
