@@ -32,6 +32,7 @@ const order = new Map(
     'sierpinski',
     'orbits',
     'birthday',
+    'pythagorean',
   ].map((slug, index) => [slug, index]),
 );
 const exhibits = entries.sort((a, b) => (order.get(a.slug) ?? order.size) - (order.get(b.slug) ?? order.size));
@@ -143,6 +144,10 @@ const exhibits = entries.sort((a, b) => (order.get(a.slug) ?? order.size) - (ord
 
   .card[data-exhibit="birthday"] {
     --scene-glow: #20383c;
+  }
+
+  .card[data-exhibit="pythagorean"] {
+    --scene-glow: #3d2a24;
   }
 
   .card:hover,

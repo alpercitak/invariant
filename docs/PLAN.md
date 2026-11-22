@@ -33,7 +33,8 @@ Keep TypeScript on 6.x while `astro check` depends on its compiler API.
 11. Add wave interference with an amplitude map, wavelength and phase controls, and a midpoint probe.
 12. Add the Sierpiński triangle with stepwise subdivision and a remaining-area readout.
 13. Add two-body orbits with an adjustable mass ratio, pausable motion, and a marked center of mass.
-14. Add the birthday paradox with an adjustable group size, a calendar of sampled birthdays, and the calculated probability of a match. Add the remaining exhibits individually as their experiments, explanations, and math checks are ready.
+14. Add the birthday paradox with an adjustable group size, a calendar of sampled birthdays, and the calculated probability of a match.
+15. Add Pythagorean dissection with two arrangements of four adjustable triangles and a readout of the uncovered square areas. Add the remaining exhibits individually as their experiments, explanations, and math checks are ready.
 
 Each exhibit should be checked against a known result, an invariant, or an appropriate numerical or statistical reference. For example, check that uncoupled Kuramoto oscillators follow their natural frequencies and that the Lorenz solver agrees over a short interval when the time step is reduced.
 

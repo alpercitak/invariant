@@ -1,0 +1,48 @@
+---
+import { type Board as BoardData, SIDE } from './model';
+import { polygonPoints } from './plot';
+
+interface Props {
+  board: BoardData;
+}
+
+const { board } = Astro.props;
+---
+
+<g>
+  {board.triangles.map((triangle) => <polygon data-triangle points={polygonPoints(triangle)} />)}
+  {board.squares.map(({ points, center, label }) => (
+    <g>
+      <polygon data-square points={polygonPoints(points)} />
+      <text x={center[0]} y={center[1]} data-label>{label}</text>
+    </g>
+  ))}
+  <rect width={SIDE} height={SIDE} />
+</g>
+
+<style>
+  [data-triangle] {
+    fill: #c28765;
+    stroke: #181719;
+    stroke-width: 0.05;
+  }
+
+  [data-square] {
+    fill: #17383a;
+    stroke: #8fd3ce;
+    stroke-width: 0.045;
+  }
+
+  rect {
+    fill: none;
+    stroke: #f2c7a9;
+    stroke-width: 0.045;
+  }
+
+  text {
+    fill: #dbf4f1;
+    font: 0.75px var(--mono);
+    text-anchor: middle;
+    dominant-baseline: central;
+  }
+</style>

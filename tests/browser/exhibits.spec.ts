@@ -24,6 +24,7 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     'Sierpiński triangle',
     'Two-body orbits',
     'Birthday paradox',
+    'Pythagorean dissection',
   ]) {
     const card = page.getByRole('link', { name, exact: true });
     await expect(card.locator('svg')).toBeVisible();
@@ -38,6 +39,24 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     await expect(guide.locator('p')).not.toBeEmpty();
     await page.getByRole('link', { name: 'All exhibits' }).click();
   }
+});
+
+test('Pythagorean dissection updates both arrangements and their areas from the keyboard', async ({ page }) => {
+  await page.goto('/exhibits/pythagorean/');
+  const slider = page.getByRole('slider', { name: 'Leg a (units)' });
+  const areas = page.locator('#pythagorean-areas');
+  const hypotenuseSquare = page.getByRole('img', { name: /square on the hypotenuse/ }).locator('[data-square]');
+  const legSquare = page
+    .getByRole('img', { name: /two squares on the legs/ })
+    .locator('[data-square]')
+    .first();
+  await expect(areas).toHaveText('9 + 16 = 25 square units');
+  await expect(hypotenuseSquare).toHaveAttribute('points', '3,0 7,3 4,7 0,4');
+  await slider.press('End');
+  await expect(slider).toHaveValue('5');
+  await expect(areas).toHaveText('25 + 4 = 29 square units');
+  await expect(hypotenuseSquare).toHaveAttribute('points', '5,0 7,5 2,7 0,2');
+  await expect(legSquare).toHaveAttribute('points', '0,0 5,0 5,5 0,5');
 });
 
 test('birthday groups cross the 50% threshold and can be redrawn independently', async ({ page }) => {

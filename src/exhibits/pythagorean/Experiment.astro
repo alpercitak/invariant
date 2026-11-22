@@ -1,0 +1,59 @@
+---
+import Board from './Board.astro';
+import { buildDissection, DEFAULT_LEG, LEG_STEP, MAX_LEG, MIN_LEG, SIDE } from './model';
+import { areaSummary } from './plot';
+
+const { b, hypotenuse, legs } = buildDissection(DEFAULT_LEG);
+const viewBox = `-0.1 -0.1 ${SIDE + 0.2} ${SIDE + 0.2}`;
+---
+
+<section class="scene-panel" aria-label="Pythagorean dissection experiment">
+  <div class="scene-view">
+    <svg id="pythagorean-hypotenuse" viewBox={viewBox} role="img" aria-label="Four triangles around a square on the hypotenuse" aria-describedby="pythagorean-areas">
+      <Board board={hypotenuse} />
+    </svg>
+    <svg id="pythagorean-legs" viewBox={viewBox} role="img" aria-label="The same triangles around two squares on the legs" aria-describedby="pythagorean-areas">
+      <Board board={legs} />
+    </svg>
+  </div>
+  <div class="scene-toolbar">
+    <div class="scene-controls">
+      <label for="pythagorean-leg">Leg a (units)</label>
+      <div class="scene-range">
+        <input id="pythagorean-leg" type="range" min={MIN_LEG} max={MAX_LEG} step={LEG_STEP} value={DEFAULT_LEG} disabled />
+        <span id="pythagorean-length" aria-hidden="true">{DEFAULT_LEG}</span>
+      </div>
+    </div>
+    <output id="pythagorean-areas" class="scene-readout" for="pythagorean-leg" aria-label="Square areas">{areaSummary(DEFAULT_LEG, b)}</output>
+  </div>
+</section>
+
+<script>
+  import './experiment';
+</script>
+
+<style>
+  .scene-view {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 19rem));
+    justify-content: center;
+    gap: clamp(0.55rem, 4vw, 2.75rem);
+    padding: clamp(0.6rem, 3.5vw, 2.25rem);
+    background: radial-gradient(ellipse at 50% 55%, #2e2925, var(--paper) 76%);
+  }
+
+  .scene-view svg {
+    display: block;
+    width: 100%;
+  }
+
+  .scene-controls {
+    flex-basis: 16rem;
+  }
+
+  .scene-range span {
+    min-width: 4ch;
+    color: var(--accent);
+    font: 0.8rem / 1.45 var(--mono);
+  }
+</style>
