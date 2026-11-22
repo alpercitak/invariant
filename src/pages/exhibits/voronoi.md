@@ -1,4 +1,5 @@
 ---
+
 layout: ../../layouts/Exhibit.astro
 title: Voronoi diagrams
 description: Move warehouses and watch their nearest-neighbor regions change.

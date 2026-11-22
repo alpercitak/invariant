@@ -1,4 +1,5 @@
 ---
+
 layout: ../../layouts/Exhibit.astro
 title: Logistic map
 description: Change one growth factor and watch a population settle, alternate, or fluctuate irregularly.

@@ -1,4 +1,5 @@
 ---
+
 layout: ../../layouts/Exhibit.astro
 title: Standing waves
 description: Change the harmonic of a string fixed at both ends and see which points stay still.

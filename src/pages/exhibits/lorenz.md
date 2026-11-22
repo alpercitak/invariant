@@ -1,4 +1,5 @@
 ---
+
 layout: ../../layouts/Exhibit.astro
 title: Lorenz attractor
 description: Watch two nearby Lorenz trajectories drift apart.
@@ -42,4 +43,4 @@ For a second example of how simple dynamics shape a group's behavior, try [Kuram
 
 ## Further reading
 
-Edward N. Lorenz, [“Deterministic Nonperiodic Flow”](https://doi.org/10.1175/1520-0469(1963)020%3C0130:DNF%3E2.0.CO;2), *Journal of the Atmospheric Sciences* 20 (1963), 130–141.
+Edward N. Lorenz, [“Deterministic Nonperiodic Flow”](https://doi.org/10.1175/1520-0469(1963)020%3C0130:DNF%3E2.0.CO;2), _Journal of the Atmospheric Sciences_ 20 (1963), 130–141.

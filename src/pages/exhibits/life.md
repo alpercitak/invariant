@@ -1,4 +1,5 @@
 ---
+
 layout: ../../layouts/Exhibit.astro
 title: Conway’s Game of Life
 description: Step through Conway’s Game of Life and see how a local rule produces still, repeating, and moving patterns.

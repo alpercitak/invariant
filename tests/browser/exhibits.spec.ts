@@ -322,10 +322,10 @@ test('Fourier redraws with keyboard input and restarts the trace while paused', 
   await expect(error).toHaveText(/^0\.\d+$/);
   await slider.press('Home');
   await expect(slider).toHaveValue('0');
-  const initialError = Number(await error.innerText());
+  const initialError = Number(await error.textContent());
   await slider.press('ArrowRight');
   await expect(slider).toHaveValue('1');
-  expect(Number(await error.innerText())).toBeLessThan(initialError);
+  expect(Number(await error.textContent())).toBeLessThan(initialError);
   await slider.press('End');
   await expect(slider).toHaveValue('128');
   await expect(error).toHaveText('<0.001');
@@ -346,13 +346,13 @@ test('Kuramoto starts paused with reduced motion and couples with keyboard input
   const synchrony = page.locator('#synchrony');
   await expect(play).toBeVisible();
   await expect(synchrony).toHaveText(/\d+%/);
-  const startingSynchrony = await synchrony.innerText();
+  const startingSynchrony = (await synchrony.textContent()) ?? '';
   const coupling = page.getByRole('slider', { name: /Coupling/ });
   await coupling.press('End');
   await expect(coupling).toHaveValue('5');
   await play.press('Enter');
   await expect
-    .poll(async () => Number.parseInt(await synchrony.innerText(), 10), { timeout: 10_000 })
+    .poll(async () => Number.parseInt((await synchrony.textContent()) ?? '', 10), { timeout: 10_000 })
     .toBeGreaterThan(90);
 
   await page.getByRole('button', { name: 'Pause' }).press('Enter');
@@ -376,7 +376,7 @@ test('Lorenz advances both paths and restores the selected separation on reset',
     window.dispatchEvent(new PageTransitionEvent('pagehide', { persisted: true }));
     window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }));
   });
-  const restored = await readout.innerText();
+  const restored = (await readout.textContent()) ?? '';
   await expect(readout).not.toHaveText(restored);
 
   await page.getByRole('button', { name: 'Pause' }).click();

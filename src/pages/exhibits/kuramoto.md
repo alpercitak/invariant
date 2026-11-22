@@ -1,4 +1,5 @@
 ---
+
 layout: ../../layouts/Exhibit.astro
 title: Kuramoto synchronization
 description: Explore how a crowd of oscillators can find a shared beat.
@@ -33,4 +34,4 @@ For another experiment with rotating arrows, try [Fourier drawing](/exhibits/fou
 ## Further reading
 
 - Yoshiki Kuramoto, [“Self-entrainment of a population of coupled non-linear oscillators”](https://cir.nii.ac.jp/crid/1361418518461244800) (1975).
-- Juan A. Acebrón et al., [“The Kuramoto model: A simple paradigm for synchronization phenomena”](https://journals.aps.org/rmp/abstract/10.1103/RevModPhys.77.137), *Reviews of Modern Physics* 77, 137 (2005).
+- Juan A. Acebrón et al., [“The Kuramoto model: A simple paradigm for synchronization phenomena”](https://journals.aps.org/rmp/abstract/10.1103/RevModPhys.77.137), _Reviews of Modern Physics_ 77, 137 (2005).
