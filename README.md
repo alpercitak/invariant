@@ -12,6 +12,7 @@ Invariant is an interactive archive of mathematical patterns. Pick a scene from 
 - [Galton board](src/pages/exhibits/galton.md) lets you drop balls through pegs, bias the turns, and compare the observed distribution with its binomial prediction.
 - [Mandelbrot set](src/pages/exhibits/mandelbrot.md) lets you zoom into a fractal and see how the step limit changes which points can be shown to escape.
 - [Standing waves](src/pages/exhibits/standing-waves.md) lets you change a string’s harmonic and see which points stay still as it vibrates.
+- [Bézier curves](src/pages/exhibits/bezier.md) lets you move four control points and see how straight-line interpolation produces a smooth curve.
 
 ## Run locally
 

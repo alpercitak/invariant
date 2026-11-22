@@ -1,0 +1,97 @@
+---
+import { deCasteljau } from './model';
+import { constructionDescription, controlLabel, curvePath, DEFAULT_T, dotMarks, HEIGHT, INITIAL_POINTS, pointList, WIDTH } from './plot';
+
+interface Props {
+  preview?: boolean;
+}
+
+const { preview = false } = Astro.props;
+const { first, second, point } = deCasteljau(INITIAL_POINTS, DEFAULT_T);
+---
+
+<svg
+  id={preview ? undefined : 'bezier-plot'}
+  class:list={{ 'scene-view': !preview }}
+  viewBox={preview ? '0 -10 600 343' : `0 0 ${WIDTH} ${HEIGHT}`}
+  role={preview ? undefined : 'group'}
+  aria-hidden={preview ? 'true' : undefined}
+  aria-label={preview ? undefined : 'Cubic Bézier curve with four movable control points'}
+  aria-describedby={preview ? undefined : 'bezier-construction'}
+>
+  {!preview && <desc id="bezier-construction">{constructionDescription(first, second)}</desc>}
+  <g aria-hidden="true" fill="none" stroke-linejoin="round" stroke-linecap="round">
+    <polyline
+      id={preview ? undefined : 'bezier-controls'}
+      points={pointList(INITIAL_POINTS)}
+      stroke="var(--muted)"
+      stroke-width="1.25"
+      stroke-opacity="0.63"
+      stroke-dasharray="4 6"
+      vector-effect="non-scaling-stroke"
+    />
+    <path
+      id={preview ? undefined : 'bezier-curve'}
+      d={curvePath(INITIAL_POINTS)}
+      stroke="var(--accent)"
+      stroke-width="2.8"
+      vector-effect="non-scaling-stroke"
+    />
+    <g stroke="var(--secondary)">
+      <polyline id={preview ? undefined : 'bezier-first'} points={pointList(first)} stroke-width="1.35" vector-effect="non-scaling-stroke" />
+      <path id={preview ? undefined : 'bezier-first-dots'} d={dotMarks(first)} stroke-width="5" vector-effect="non-scaling-stroke" />
+    </g>
+    <g stroke="var(--bezier-second, #c0aaf1)">
+      <polyline id={preview ? undefined : 'bezier-second'} points={pointList(second)} stroke-width="1.6" stroke-dasharray="5 3" vector-effect="non-scaling-stroke" />
+      <path id={preview ? undefined : 'bezier-second-dots'} d={dotMarks(second)} stroke-width="5.5" vector-effect="non-scaling-stroke" />
+    </g>
+  </g>
+  {INITIAL_POINTS.map((control, index) => (
+    <g
+      class:list={{ handle: !preview }}
+      data-bezier-handle={preview ? undefined : index}
+      transform={`translate(${control.x} ${control.y})`}
+      tabindex={preview ? undefined : 0}
+      role={preview ? undefined : 'group'}
+      aria-label={preview ? undefined : controlLabel(control, index)}
+    >
+      {!preview && <circle class="hit" r="32" fill="transparent" />}
+      <circle class="focus-ring" r="15" fill="none" stroke="transparent" stroke-width="2" vector-effect="non-scaling-stroke" />
+      <circle class="handle-dot" r="9" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.7" vector-effect="non-scaling-stroke" />
+    </g>
+  ))}
+  <circle
+    id={preview ? undefined : 'bezier-point'}
+    cx={point.x}
+    cy={point.y}
+    r="7"
+    fill="var(--accent)"
+    stroke="var(--paper)"
+    stroke-width="1.5"
+    vector-effect="non-scaling-stroke"
+    aria-hidden="true"
+    pointer-events="none"
+  />
+</svg>
+
+<style>
+  .handle {
+    cursor: grab;
+  }
+
+  .handle:active {
+    cursor: grabbing;
+  }
+
+  .handle :is(.handle-dot, .focus-ring) {
+    pointer-events: none;
+  }
+
+  .handle:focus-visible {
+    outline: none;
+  }
+
+  .handle:focus-visible .focus-ring {
+    stroke: var(--accent);
+  }
+</style>

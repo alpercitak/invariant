@@ -16,7 +16,7 @@ const entries = Object.entries(import.meta.glob<Entry>('./exhibits/*.md', { eage
   slug: path.split('/').at(-1)?.replace(/\.md$/, '') ?? '',
 }));
 const order = new Map(
-  ['kuramoto', 'lorenz', 'voronoi', 'fourier', 'logistic', 'galton', 'mandelbrot', 'standing-waves'].map((slug, index) => [
+  ['kuramoto', 'lorenz', 'voronoi', 'fourier', 'logistic', 'galton', 'mandelbrot', 'standing-waves', 'bezier'].map((slug, index) => [
     slug,
     index,
   ]),
@@ -106,6 +106,10 @@ const exhibits = entries.sort((a, b) => (order.get(a.slug) ?? order.size) - (ord
 
   .card[data-exhibit="standing-waves"] {
     --scene-glow: #243536;
+  }
+
+  .card[data-exhibit="bezier"] {
+    --scene-glow: #332d45;
   }
 
   .card:hover,

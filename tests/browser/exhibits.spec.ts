@@ -17,6 +17,7 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     'Galton board',
     'Mandelbrot set',
     'Standing waves',
+    'Bézier curves',
   ]) {
     const card = page.getByRole('link', { name, exact: true });
     await expect(card.locator('svg')).toBeVisible();
@@ -30,6 +31,85 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     await expect(guide.locator('p')).toBeVisible();
     await expect(guide.locator('p')).not.toBeEmpty();
     await page.getByRole('link', { name: 'All exhibits' }).click();
+  }
+});
+
+test('Bézier controls reshape the curve and the parameter reaches both endpoints', async ({ page }) => {
+  await page.goto('/exhibits/bezier/');
+  const slider = page.getByRole('slider', { name: 'Parameter t' });
+  const plot = page.getByRole('group', { name: 'Cubic Bézier curve with four movable control points' });
+  const control = page.getByRole('group', { name: /^Control point 2 at/ });
+  const curve = page.locator('#bezier-curve');
+  const result = page.getByLabel('Point on the curve', { exact: true });
+  const initialCurve = await curve.getAttribute('d');
+  const initialReading = await result.textContent();
+
+  await control.press('Shift+ArrowRight');
+  await expect(control).toBeFocused();
+  await expect(control).toHaveAttribute('transform', 'translate(146 48)');
+  await expect(control).toHaveAccessibleName(/at x 146, y 48/);
+  await expect(plot).toHaveAccessibleDescription(/First step has x 96\.8 · y 166\.8.*Second step has x/);
+  await expect(control.locator('.focus-ring')).toHaveCSS('stroke', 'rgb(240, 189, 120)');
+  expect(await curve.getAttribute('d')).not.toBe(initialCurve);
+  expect(await result.textContent()).not.toBe(initialReading);
+
+  await control.scrollIntoViewIfNeeded();
+  const handle = await control.locator('.handle-dot').boundingBox();
+  if (!handle) throw new Error('Missing Bézier handle');
+  const x = handle.x + handle.width / 2;
+  const y = handle.y + handle.height / 2;
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  await page.mouse.move(x + 55, y + 30, { steps: 4 });
+  await page.mouse.up();
+  await expect(control).not.toHaveAttribute('transform', 'translate(146 48)');
+
+  await slider.press('Home');
+  await expect(result).toHaveText('x 64.0 · y 246.0');
+  await slider.press('End');
+  await expect(result).toHaveText('x 534.0 · y 236.0');
+
+  await page.getByRole('button', { name: 'Reset curve' }).click();
+  await expect(slider).toHaveValue('0.4');
+  expect(await curve.getAttribute('d')).toBe(initialCurve);
+  expect(await result.textContent()).toBe(initialReading);
+});
+
+test('Bézier touch dragging follows the handle through a multi-step gesture', async ({ browser, baseURL }) => {
+  const context = await browser.newContext({
+    baseURL,
+    viewport: { width: 390, height: 800 },
+    hasTouch: true,
+    isMobile: true,
+  });
+  try {
+    const page = await context.newPage();
+    await page.goto('/exhibits/bezier/');
+    const positions = await page.locator('#bezier-plot').evaluate((plot: SVGSVGElement) => {
+      const matrix = plot.getScreenCTM();
+      if (!matrix) throw new Error('Bézier plot is outside the viewport');
+      return [
+        [126, 48],
+        [155, 85],
+        [200, 135],
+        [250, 200],
+      ].map(([x, y]) => {
+        const point = new DOMPoint(x, y).matrixTransform(matrix);
+        return { x: point.x, y: point.y };
+      });
+    });
+    const session = await context.newCDPSession(page);
+    await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [positions[0]] });
+    for (const point of positions.slice(1)) {
+      await session.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [point] });
+    }
+    await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    const transform = await page.locator('[data-bezier-handle="1"]').getAttribute('transform');
+    const [x, y] = transform?.slice('translate('.length, -1).split(' ').map(Number) ?? [];
+    expect(x).toBeCloseTo(250, 0);
+    expect(y).toBeCloseTo(200, 0);
+  } finally {
+    await context.close();
   }
 });
 
