@@ -18,7 +18,7 @@ The [project plan](PLAN.md) tracks the full exhibit roadmap.
 - [x] Upgrade to TypeScript 6 and explicitly load Bun and Node.js types.
 - [x] Upgrade to Biome 2.6 and apply its formatter and lint changes.
 - [ ] Remove the Dependabot TypeScript 7 restriction when [Astro supports it](https://github.com/withastro/roadmap/discussions/1321).
-- [ ] Deploy to Cloudflare Pages and verify the archive and exhibit URLs.
+- [x] Deploy to Cloudflare Pages and verify the archive and exhibit URLs.
 
 ## Dynamics
 
@@ -30,18 +30,21 @@ The [project plan](PLAN.md) tracks the full exhibit roadmap.
 - [x] Build the Voronoi exhibit with movable sites and verify cell assignment by nearest-site distance.
 - [x] Build the Bézier curve exhibit with movable handles, interpolation steps, and checks against the cubic Bernstein formula.
 - [x] Build Pythagorean dissection with a leg-length slider, two arrangements of four triangles, and checks for congruence and equal uncovered areas.
+- [ ] Build great circles to compare a shortest route on a globe with its appearance on a flat map.
 
 ## Emergence and fractals
 
 - [x] Build a Mandelbrot escape map with zoom presets, a step limit, and tests for known bounded and escaping orbits.
 - [x] Build Conway’s Game of Life with four starting patterns, manual and automatic stepping, and tests for still life, oscillation, and translation.
 - [x] Build the Sierpiński triangle with stepwise subdivision and tests for the corner pieces, piece count, and remaining area.
+- [ ] Build Gray–Scott reaction–diffusion to show spots and stripes emerging from local rules.
 
 ## Probability
 
 - [x] Build the Galton board with single and batch drops, adjustable bias, and tests for the fair binomial distribution and biased mean.
 - [x] Build Monte Carlo π with batch sampling, a running estimate and absolute error, and tests for classification and the area-based estimate.
 - [x] Build the birthday paradox with a calendar of sampled birthdays, adjustable group size, and checks for the 23-person threshold and repeated dates.
+- [x] Build Bayes’ theorem with an adjustable defect rate, a grid of inspected parts, and checks for the share of flagged parts that are defective.
 
 ## Waves and signals
 

@@ -1,0 +1,36 @@
+---
+import { inspectLot } from './model';
+import { lotMarks } from './plot';
+
+interface Props {
+  defectPercent: number;
+}
+
+const marks = lotMarks(inspectLot(Astro.props.defectPercent));
+---
+
+{marks.map(({ category, path }) => <path data-lot-category={category} d={path} />)}
+
+<style>
+  [data-lot-category="flagged-defective"] {
+    fill: #ffb392;
+  }
+
+  [data-lot-category="flagged-intact"] {
+    fill: #9cd9ce;
+  }
+
+  [data-lot-category="missed-defective"],
+  [data-lot-category="unflagged-intact"] {
+    fill: none;
+    stroke-width: 1.3;
+  }
+
+  [data-lot-category="missed-defective"] {
+    stroke: #bc8c79;
+  }
+
+  [data-lot-category="unflagged-intact"] {
+    stroke: #71898b;
+  }
+</style>

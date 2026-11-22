@@ -1,0 +1,87 @@
+---
+import LotMarks from './LotMarks.astro';
+import { inspectLot, MAX_DEFECT_PERCENT, MIN_DEFECT_PERCENT } from './model';
+import { flaggedSummary, lotDescription, percent } from './plot';
+
+const lot = inspectLot(MIN_DEFECT_PERCENT);
+---
+
+<section class="scene-panel" aria-label="Bayes’ theorem experiment">
+  <div class="lot-view">
+    <svg id="bayes-lot" class="scene-view" viewBox="-6 -6 412 262" role="img" aria-label="A batch of one thousand inspected parts" aria-describedby="bayes-lot-details">
+      <desc id="bayes-lot-details">{lotDescription(lot)}</desc>
+      <LotMarks defectPercent={MIN_DEFECT_PERCENT} />
+    </svg>
+  </div>
+  <ul class="scene-legend" aria-label="Batch legend">
+    <li><span class="defective" aria-hidden="true"></span>Defective</li>
+    <li><span class="intact" aria-hidden="true"></span>Intact</li>
+    <li>Filled marks were flagged</li>
+  </ul>
+  <div class="scene-toolbar">
+    <div class="scene-controls">
+      <label for="bayes-defect">Defect rate</label>
+      <div class="scene-range">
+        <input id="bayes-defect" type="range" min={MIN_DEFECT_PERCENT} max={MAX_DEFECT_PERCENT} step="1" value={MIN_DEFECT_PERCENT} aria-valuetext={`${MIN_DEFECT_PERCENT}%`} disabled />
+        <span id="bayes-defect-value" aria-hidden="true">{MIN_DEFECT_PERCENT}%</span>
+      </div>
+    </div>
+    <output id="bayes-result" class="scene-readout" for="bayes-defect">
+      <strong data-bayes-probability>{percent.format(lot.probability)}</strong>{' '}
+      <span data-bayes-count>{flaggedSummary(lot)}</span>
+    </output>
+  </div>
+</section>
+
+<script src="./experiment.ts"></script>
+
+<style>
+  .lot-view {
+    border-radius: 0.2rem;
+    background: radial-gradient(ellipse at 50% 42%, #233638, var(--paper) 79%);
+  }
+
+  svg {
+    max-width: 34rem;
+    margin-inline: auto;
+    background: transparent;
+  }
+
+  .scene-legend span {
+    width: 0.48rem;
+    height: 0.48rem;
+    border: 0;
+  }
+
+  .defective {
+    background: #ffb392;
+    transform: rotate(45deg);
+  }
+
+  .intact {
+    border-radius: 50%;
+    background: #9cd9ce;
+  }
+
+  .scene-controls {
+    flex-basis: 16rem;
+  }
+
+  .scene-range span {
+    min-width: 3ch;
+    color: var(--accent);
+    font: 0.8rem / 1.45 var(--mono);
+  }
+
+  .scene-readout {
+    display: flex;
+    align-items: baseline;
+    gap: 0.65rem;
+  }
+
+  .scene-readout strong {
+    color: #ffb392;
+    font: 1.65rem / 1 var(--serif);
+    white-space: nowrap;
+  }
+</style>

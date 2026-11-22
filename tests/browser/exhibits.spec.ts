@@ -26,6 +26,7 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     'Birthday paradox',
     'Pythagorean dissection',
     'Doppler effect',
+    'Bayes’ theorem',
   ]) {
     const card = page.getByRole('link', { name, exact: true });
     await expect(card.locator('svg')).toBeVisible();
@@ -40,6 +41,28 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     await expect(guide.locator('p')).not.toBeEmpty();
     await page.getByRole('link', { name: 'All exhibits' }).click();
   }
+});
+
+test('Bayes inspection updates the batch and posterior when the defect rate changes', async ({ page }) => {
+  await page.goto('/exhibits/bayes/');
+  const rate = page.getByRole('slider', { name: 'Defect rate' });
+  const result = page.locator('#bayes-result');
+  const grid = page.getByRole('img', { name: 'A batch of one thousand inspected parts' });
+  const flaggedDefective = grid.locator('[data-lot-category="flagged-defective"]');
+  await expect(rate).toHaveValue('1');
+  await expect(result).toHaveText('8.3% 9 of 108 flagged parts are defective');
+  await expect(flaggedDefective).toHaveAttribute('d', /^(?:M[^M]+){9}$/);
+
+  await rate.press('End');
+  await expect(rate).toHaveAttribute('aria-valuetext', '50%');
+  await expect(result).toHaveText('90% 450 of 500 flagged parts are defective');
+  await expect(flaggedDefective).toHaveAttribute('d', /^(?:M[^M]+){450}$/);
+  await expect(grid).toHaveAccessibleDescription(
+    'The inspection flagged 450 defective and 50 intact parts. It passed 50 defective and 450 intact parts.',
+  );
+
+  await rate.press('Home');
+  await expect(result).toHaveText('8.3% 9 of 108 flagged parts are defective');
 });
 
 test('Doppler speed changes observed pitch and wavefronts advance only while playing', async ({ page }) => {
