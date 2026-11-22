@@ -23,6 +23,7 @@ Invariant is an interactive archive of mathematical patterns. Pick a scene from 
 - [Doppler effect](src/pages/exhibits/doppler.md) shows how a moving source crowds its wavefronts ahead and spreads them behind, changing the pitch a listener hears.
 - [Bayes’ theorem](src/pages/exhibits/bayes.md) lets you adjust a batch’s defect rate and see how many flagged parts are actually defective.
 - [Great circles](src/pages/exhibits/great-circles.md) compares the shortest route with a constant-latitude route on a globe and a flat map.
+- [Gray–Scott reaction–diffusion](src/pages/exhibits/reaction-diffusion.md) shows how changing the feed and removal rates turns the same starting patches into spots or stripes.
 
 ## Run locally
 

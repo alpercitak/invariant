@@ -28,6 +28,7 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     'Doppler effect',
     'Bayes’ theorem',
     'Great circles',
+    'Gray–Scott reaction–diffusion',
   ]) {
     const card = page.getByRole('link', { name, exact: true });
     await expect(card.locator('svg')).toBeVisible();
@@ -42,6 +43,44 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     await expect(guide.locator('p')).not.toBeEmpty();
     await page.getByRole('link', { name: 'All exhibits' }).click();
   }
+});
+
+test('reaction–diffusion compares both presets from the same reset field and pauses playback', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/exhibits/reaction-diffusion/');
+  const preset = page.getByRole('combobox', { name: 'Preset' });
+  const advance = page.getByRole('button', { name: 'Advance 250 steps' });
+  const play = page.getByRole('button', { name: 'Play', exact: true });
+  const result = page.locator('#reaction-result');
+  const field = page.getByRole('img', { name: 'Concentration of V in the reaction–diffusion grid' });
+  const image = () => page.evaluate(() => document.querySelector<HTMLCanvasElement>('#reaction-grid')?.toDataURL());
+  await expect(page.locator('#reaction-grid')).toBeVisible();
+  await expect(result).toHaveText('Step 0 · High V in 11% of cells');
+  await expect(field).toHaveAccessibleDescription(/patches tend to grow, split, and stay separate/);
+  const initialImage = await image();
+
+  await advance.press('Enter');
+  await expect(result).toHaveText('Step 250 · High V in 9% of cells');
+  expect(await image()).not.toBe(initialImage);
+
+  await preset.selectOption('Stripes');
+  await expect(result).toHaveText('Step 0 · High V in 11% of cells');
+  await expect(field).toHaveAccessibleDescription(/patches spread into bands that often join/);
+  expect(await image()).toBe(initialImage);
+  await advance.press('Enter');
+  await expect(result).toHaveText('Step 250 · High V in 45% of cells');
+
+  await play.press('Enter');
+  await expect(result).not.toContainText('Step 250');
+  await page.getByRole('button', { name: 'Pause', exact: true }).press('Enter');
+  await expect(play).toBeVisible();
+  const pausedResult = await result.textContent();
+  await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  expect(await result.textContent()).toBe(pausedResult);
+
+  await page.getByRole('button', { name: 'Reset', exact: true }).press('Enter');
+  expect(await image()).toBe(initialImage);
+  await expect(preset).toHaveValue('Stripes');
 });
 
 test('great-circle and constant-latitude routes coincide at the equator', async ({ page }) => {

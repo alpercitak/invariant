@@ -1,0 +1,15 @@
+---
+import { HEIGHT, WIDTH } from './model';
+import { fieldPaths, PALETTE } from './plot';
+
+interface Props {
+  v: Float32Array;
+}
+
+const paths = fieldPaths(Astro.props.v);
+---
+
+<svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} aria-hidden="true" shape-rendering="crispEdges">
+  <rect width={WIDTH} height={HEIGHT} fill={`rgb(${PALETTE[0].join(' ')})`} />
+  {paths.map((path, index) => path && <path d={path} fill={`rgb(${PALETTE[index].join(' ')})`} />)}
+</svg>

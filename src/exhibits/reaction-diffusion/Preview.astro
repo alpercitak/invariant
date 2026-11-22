@@ -1,0 +1,9 @@
+---
+import FieldPlot from './FieldPlot.astro';
+import { PRESETS, seededField, stepField } from './model';
+
+const field = seededField();
+for (let step = 0; step < 2200; step += 1) stepField(field, PRESETS[1]);
+---
+
+<FieldPlot v={field.v} />

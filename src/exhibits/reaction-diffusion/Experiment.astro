@@ -1,0 +1,84 @@
+---
+import FieldPlot from './FieldPlot.astro';
+import { HEIGHT, PRESETS, seededField, WIDTH } from './model';
+import { ADVANCE_STEPS, fieldReadout } from './plot';
+
+const field = seededField();
+---
+
+<section class="scene-panel" aria-label="Gray–Scott reaction–diffusion experiment">
+  <div class="field" role="img" aria-label="Concentration of V in the reaction–diffusion grid" aria-describedby="reaction-result reaction-pattern">
+    <div id="reaction-preview">
+      <FieldPlot v={field.v} />
+    </div>
+    <canvas id="reaction-grid" width={WIDTH} height={HEIGHT} aria-hidden="true" hidden></canvas>
+  </div>
+  <p id="reaction-pattern" hidden>{PRESETS[0].description}</p>
+  <ul class="scene-legend" aria-label="Concentration legend">
+    <li><span class="scale" aria-hidden="true"></span>Low to high V</li>
+  </ul>
+  <div class="scene-toolbar">
+    <div class="scene-actions">
+      <label for="reaction-preset">Preset</label>
+      <select id="reaction-preset" disabled>
+        {PRESETS.map(({ name }) => <option>{name}</option>)}
+      </select>
+    </div>
+    <div class="scene-actions">
+      <button id="reaction-play" type="button" disabled>Play</button>
+      <button id="reaction-advance" type="button" aria-label={`Advance ${ADVANCE_STEPS} steps`} disabled>Advance</button>
+      <button id="reaction-reset" type="button" disabled>Reset</button>
+    </div>
+    <p id="reaction-result" class="scene-readout">{fieldReadout(0, field.v)}</p>
+    <output id="reaction-announcement" class="visually-hidden"></output>
+  </div>
+</section>
+
+<script src="./experiment.ts"></script>
+
+<style>
+  .field {
+    overflow: hidden;
+    border-radius: 0.2rem;
+    background: #0f171b;
+  }
+
+  .field :global(svg),
+  canvas:not([hidden]) {
+    display: block;
+    width: 100%;
+    max-width: 40rem;
+    height: auto;
+    margin-inline: auto;
+  }
+
+  .scene-legend .scale {
+    width: 2.35rem;
+    height: 0.45rem;
+    border: 0;
+    border-radius: 0.1rem;
+    background: linear-gradient(90deg, #1a3e4a, #f4df94);
+  }
+
+  label {
+    font-weight: 650;
+  }
+
+  select {
+    padding: 0.45rem 0.6rem;
+    border: 1px solid var(--line);
+    border-radius: 0.25rem;
+    color: var(--ink);
+    background: var(--paper);
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>
