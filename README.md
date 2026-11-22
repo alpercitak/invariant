@@ -35,6 +35,8 @@ bunx playwright install chromium
 bun run test:browser
 ```
 
+GitHub Actions runs the project checks and Chromium tests on pull requests and pushes to `main`. Dependabot proposes monthly updates for Bun dependencies and GitHub Actions, grouping minor and patch updates by ecosystem.
+
 ## Deploy to Cloudflare Pages
 
 Use `main` as the production branch, `bun run build` as the build command, and `dist` as the build output directory. Set `NODE_VERSION` to `22.16.0` and `BUN_VERSION` to `1.4.2` for the same toolchain used locally. [Cloudflare Pages Astro guide](https://developers.cloudflare.com/pages/framework-guides/deploy-an-astro-site/)
