@@ -21,6 +21,7 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     'Conway’s Game of Life',
     'Monte Carlo π',
     'Wave interference',
+    'Sierpiński triangle',
   ]) {
     const card = page.getByRole('link', { name, exact: true });
     await expect(card.locator('svg')).toBeVisible();
@@ -35,6 +36,26 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     await expect(guide.locator('p')).not.toBeEmpty();
     await page.getByRole('link', { name: 'All exhibits' }).click();
   }
+});
+
+test('Sierpiński subdivision changes the visible pieces and reports their area', async ({ page }) => {
+  await page.goto('/exhibits/sierpinski/');
+  const step = page.getByRole('slider', { name: 'Subdivision step' });
+  const shape = page.locator('#sierpinski-shape');
+  const summary = page.locator('#sierpinski-summary');
+  const countPieces = () => shape.evaluate((path) => path.getAttribute('d')?.match(/Z/g)?.length ?? 0);
+
+  await expect(step).toHaveValue('3');
+  await expect(summary).toHaveText('27 triangles · 42.2% area left');
+  await step.press('Home');
+  await expect(summary).toHaveText('1 triangle · 100% area left');
+  expect(await countPieces()).toBe(1);
+  await step.press('ArrowRight');
+  await expect(summary).toHaveText('3 triangles · 75% area left');
+  expect(await countPieces()).toBe(3);
+  await step.press('End');
+  await expect(summary).toHaveText('729 triangles · 17.8% area left');
+  expect(await countPieces()).toBe(729);
 });
 
 test('wave interference reaches midpoint cancellation and resets the amplitude map', async ({ page }) => {

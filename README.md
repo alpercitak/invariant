@@ -16,6 +16,7 @@ Invariant is an interactive archive of mathematical patterns. Pick a scene from 
 - [Conway’s Game of Life](src/pages/exhibits/life.md) lets you step through generations and see how one neighbor rule produces still, repeating, and traveling patterns.
 - [Monte Carlo π](src/pages/exhibits/monte-carlo.md) lets you scatter random points and use the share inside a quarter circle to estimate π.
 - [Wave interference](src/pages/exhibits/interference.md) lets you change the wavelength and phase of two sources to see where they reinforce and cancel.
+- [Sierpiński triangle](src/pages/exhibits/sierpinski.md) lets you remove the middle of each triangle and track how much area remains.
 
 ## Run locally
 

@@ -33,6 +33,7 @@ The [project plan](PLAN.md) tracks the full exhibit roadmap.
 
 - [x] Build a Mandelbrot escape map with zoom presets, a step limit, and tests for known bounded and escaping orbits.
 - [x] Build Conway’s Game of Life with four starting patterns, manual and automatic stepping, and tests for still life, oscillation, and translation.
+- [x] Build the Sierpiński triangle with stepwise subdivision and tests for the corner pieces, piece count, and remaining area.
 
 ## Probability
 

@@ -1,0 +1,40 @@
+---
+import { INITIAL_DEPTH, MAX_DEPTH, stepSummary, trianglePath } from './plot';
+---
+
+<section class="scene-panel" aria-label="Sierpiński triangle experiment">
+  <svg class="scene-view" viewBox="0 0 560 298" role="img" aria-label="Sierpiński subdivision of an equilateral triangle" aria-describedby="sierpinski-summary">
+    <path id="sierpinski-shape" d={trianglePath(INITIAL_DEPTH)} fill="#f0ae95" />
+    <path d={trianglePath(0)} fill="none" stroke="#f0ae95" stroke-opacity="0.45" stroke-width="1.5" />
+  </svg>
+  <div class="scene-toolbar">
+    <div class="scene-controls">
+      <label for="sierpinski-step">Subdivision step</label>
+      <div class="scene-range">
+        <input id="sierpinski-step" type="range" min="0" max={MAX_DEPTH} step="1" value={INITIAL_DEPTH} aria-describedby="sierpinski-summary" disabled />
+        <span id="sierpinski-step-value" aria-hidden="true">{INITIAL_DEPTH}</span>
+      </div>
+    </div>
+    <output id="sierpinski-summary" class="scene-readout" for="sierpinski-step">{stepSummary(INITIAL_DEPTH)}</output>
+  </div>
+</section>
+
+<script>
+  import './experiment';
+</script>
+
+<style>
+  svg {
+    background: radial-gradient(ellipse at 50% 59%, #322321, var(--paper) 72%);
+  }
+
+  .scene-controls {
+    flex-basis: 19rem;
+  }
+
+  .scene-range span {
+    min-width: 1ch;
+    color: var(--accent);
+    font: 0.8rem / 1.45 var(--mono);
+  }
+</style>
