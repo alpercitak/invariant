@@ -1,0 +1,10 @@
+---
+import { DEFAULT_LATITUDE } from './model';
+import RouteDrawing from './RouteDrawing.astro';
+---
+
+<svg viewBox="0 0 360 206" aria-hidden="true">
+  <g transform="translate(27 -3) scale(0.85)">
+    <RouteDrawing view="globe" latitude={DEFAULT_LATITUDE} />
+  </g>
+</svg>

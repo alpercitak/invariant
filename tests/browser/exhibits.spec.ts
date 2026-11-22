@@ -27,6 +27,7 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     'Pythagorean dissection',
     'Doppler effect',
     'Bayes’ theorem',
+    'Great circles',
   ]) {
     const card = page.getByRole('link', { name, exact: true });
     await expect(card.locator('svg')).toBeVisible();
@@ -41,6 +42,40 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     await expect(guide.locator('p')).not.toBeEmpty();
     await page.getByRole('link', { name: 'All exhibits' }).click();
   }
+});
+
+test('great-circle and constant-latitude routes coincide at the equator', async ({ page }) => {
+  await page.goto('/exhibits/great-circles/');
+  const latitude = page.getByRole('slider', { name: 'Endpoint latitude' });
+  const distance = page.locator('#great-circles-distance');
+  const map = page.getByRole('img', { name: /routes on a flat map/ });
+  const globe = page.getByRole('img', { name: /routes on a globe/ });
+  const mapRoute = map.locator('[data-route="shortest"]');
+  const globeRoute = globe.locator('[data-route="shortest"]');
+  await expect(distance).toHaveText('Great circle 9,243 km · Constant latitude 10,222 km');
+  await expect(map).toHaveAccessibleDescription(/reaches 59\.2 degrees north/);
+  await expect(mapRoute).not.toHaveAttribute(
+    'points',
+    (await map.locator('[data-route="parallel"]').getAttribute('points')) ?? '',
+  );
+
+  await latitude.press('Home');
+  await expect(latitude).toHaveAttribute('aria-valuetext', '0° (equator)');
+  await expect(distance).toHaveText('Both routes 13,343 km');
+  await expect(globe).toHaveAccessibleDescription('Both routes follow the equator.');
+  await expect(mapRoute).toHaveAttribute(
+    'points',
+    (await map.locator('[data-route="parallel"]').getAttribute('points')) ?? '',
+  );
+  await expect(globeRoute).toHaveAttribute(
+    'points',
+    (await globe.locator('[data-route="parallel"]').getAttribute('points')) ?? '',
+  );
+
+  const equatorialRoute = await globeRoute.getAttribute('points');
+  await latitude.press('End');
+  await expect(distance).toHaveText('Great circle 4,774 km · Constant latitude 5,639 km');
+  await expect(globeRoute).not.toHaveAttribute('points', equatorialRoute ?? '');
 });
 
 test('Bayes inspection updates the batch and posterior when the defect rate changes', async ({ page }) => {

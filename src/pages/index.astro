@@ -35,6 +35,7 @@ const order = new Map(
     'pythagorean',
     'doppler',
     'bayes',
+    'great-circles',
   ].map((slug, index) => [slug, index]),
 );
 const exhibits = entries.sort((a, b) => (order.get(a.slug) ?? order.size) - (order.get(b.slug) ?? order.size));
@@ -158,6 +159,10 @@ const exhibits = entries.sort((a, b) => (order.get(a.slug) ?? order.size) - (ord
 
   .card[data-exhibit="bayes"] {
     --scene-glow: #27393a;
+  }
+
+  .card[data-exhibit="great-circles"] {
+    --scene-glow: #253846;
   }
 
   .card:hover,

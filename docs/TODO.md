@@ -30,7 +30,7 @@ The [project plan](PLAN.md) tracks the full exhibit roadmap.
 - [x] Build the Voronoi exhibit with movable sites and verify cell assignment by nearest-site distance.
 - [x] Build the Bézier curve exhibit with movable handles, interpolation steps, and checks against the cubic Bernstein formula.
 - [x] Build Pythagorean dissection with a leg-length slider, two arrangements of four triangles, and checks for congruence and equal uncovered areas.
-- [ ] Build great circles to compare a shortest route on a globe with its appearance on a flat map.
+- [x] Build great circles with adjustable endpoint latitude, globe and flat-map views, and checks for equal distances at the equator and a shorter great-circle route to the north.
 
 ## Emergence and fractals
 

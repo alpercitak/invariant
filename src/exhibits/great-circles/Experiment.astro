@@ -1,0 +1,106 @@
+---
+import { DEFAULT_LATITUDE, MAX_LATITUDE, MIN_LATITUDE } from './model';
+import { latitudeLabel, routeDescription, routeSummary, VIEW_BOX } from './plot';
+import RouteDrawing from './RouteDrawing.astro';
+
+const views = [
+  { name: 'globe', caption: 'Globe' },
+  { name: 'map', caption: 'Flat map' },
+] as const;
+---
+
+<section class="scene-panel" aria-label="Great circles experiment">
+  <div class="views">
+    {views.map(({ name, caption }) => (
+      <figure>
+        <figcaption>{caption}</figcaption>
+        <svg id={`great-circles-${name}`} class="scene-view" viewBox={VIEW_BOX} role="img" aria-label={`Great-circle and constant-latitude routes on a ${caption.toLowerCase()}`} aria-describedby={`great-circles-${name}-description`}>
+          <desc id={`great-circles-${name}-description`}>{routeDescription(DEFAULT_LATITUDE)}</desc>
+          <RouteDrawing view={name} latitude={DEFAULT_LATITUDE} />
+        </svg>
+      </figure>
+    ))}
+  </div>
+  <ul class="scene-legend" aria-label="Route legend">
+    <li><span aria-hidden="true"></span>Great circle</li>
+    <li><span class="parallel" aria-hidden="true"></span>Same latitude</li>
+  </ul>
+  <div class="scene-toolbar">
+    <div class="scene-controls">
+      <label for="great-circles-latitude">Endpoint latitude</label>
+      <div class="scene-range">
+        <input id="great-circles-latitude" type="range" min={MIN_LATITUDE} max={MAX_LATITUDE} step="1" value={DEFAULT_LATITUDE} aria-valuetext={latitudeLabel(DEFAULT_LATITUDE)} disabled />
+        <span id="great-circles-latitude-value" aria-hidden="true">{latitudeLabel(DEFAULT_LATITUDE)}</span>
+      </div>
+    </div>
+    <output id="great-circles-distance" class="scene-readout" for="great-circles-latitude">{routeSummary(DEFAULT_LATITUDE)}</output>
+  </div>
+</section>
+
+<script src="./experiment.ts"></script>
+
+<style>
+  .views {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+
+  figure {
+    margin: 0;
+    border-radius: 0.2rem;
+    background: radial-gradient(ellipse at 50% 50%, #22313d, var(--paper) 80%);
+  }
+
+  figcaption {
+    padding-top: 0.65rem;
+    color: var(--muted);
+    font: 0.8rem / 1.45 var(--mono);
+    text-align: center;
+  }
+
+  svg {
+    background: transparent;
+  }
+
+  .scene-legend span {
+    border-color: #ffd193;
+  }
+
+  .scene-legend .parallel {
+    border-color: #9bcee0;
+    border-top-style: dashed;
+  }
+
+  .scene-controls {
+    flex-basis: 21rem;
+  }
+
+  .scene-range span {
+    color: var(--accent);
+    font: 0.8rem / 1.45 var(--mono);
+    white-space: nowrap;
+  }
+
+  @media (width <= 580px) {
+    .views {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    svg {
+      height: clamp(8rem, 43vw, 15rem);
+    }
+
+    .scene-legend {
+      column-gap: 0.75rem;
+    }
+
+    .scene-legend li {
+      gap: 0.35rem;
+    }
+
+    .scene-legend span {
+      width: 0.85rem;
+    }
+  }
+</style>

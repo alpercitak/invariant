@@ -22,6 +22,7 @@ Invariant is an interactive archive of mathematical patterns. Pick a scene from 
 - [Pythagorean dissection](src/pages/exhibits/pythagorean.md) lets you reshape four right triangles and compare the square areas left by two arrangements.
 - [Doppler effect](src/pages/exhibits/doppler.md) shows how a moving source crowds its wavefronts ahead and spreads them behind, changing the pitch a listener hears.
 - [Bayes’ theorem](src/pages/exhibits/bayes.md) lets you adjust a batch’s defect rate and see how many flagged parts are actually defective.
+- [Great circles](src/pages/exhibits/great-circles.md) compares the shortest route with a constant-latitude route on a globe and a flat map.
 
 ## Run locally
 

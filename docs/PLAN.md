@@ -36,7 +36,8 @@ Keep TypeScript on 6.x while `astro check` depends on its compiler API.
 14. Add the birthday paradox with an adjustable group size, a calendar of sampled birthdays, and the calculated probability of a match.
 15. Add Pythagorean dissection with two arrangements of four adjustable triangles and a readout of the uncovered square areas.
 16. Add the Doppler effect with a source speed slider, pausable wavefronts, and pitch readouts for listeners ahead and behind.
-17. Add Bayes’ theorem with a batch inspection, adjustable defect rate, and the fraction of flagged parts that are defective. Add the remaining exhibits individually as their experiments, explanations, and math checks are ready.
+17. Add Bayes’ theorem with a batch inspection, adjustable defect rate, and the fraction of flagged parts that are defective.
+18. Add great circles with adjustable endpoint latitude, a globe and flat map, and a distance comparison. Finish the roadmap with Gray–Scott reaction–diffusion.
 
 Each exhibit should be checked against a known result, an invariant, or an appropriate numerical or statistical reference. For example, check that uncoupled Kuramoto oscillators follow their natural frequencies and that the Lorenz solver agrees over a short interval when the time step is reduced.
 

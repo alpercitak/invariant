@@ -1,0 +1,96 @@
+---
+import { GLOBE, globeGrid, MAP_LATITUDES, MAP_MERIDIANS, mapPoint, routeLines, type View } from './plot';
+
+interface Props {
+  view: View;
+  latitude: number;
+}
+
+const { view, latitude } = Astro.props;
+const { start, end, parallel, shortest } = routeLines(view, latitude);
+const topLeft = mapPoint(90, -90);
+const bottomRight = mapPoint(-30, 90);
+---
+
+{view === 'globe' ? (
+  <g>
+    <defs>
+      <radialGradient id="great-circles-sphere" cx="37%" cy="30%" r="72%">
+        <stop stop-color="#263e4e" />
+        <stop offset="1" stop-color="#142331" />
+      </radialGradient>
+    </defs>
+    <circle class="bounds" cx={GLOBE.x} cy={GLOBE.y} r={GLOBE.radius} fill="url(#great-circles-sphere)" />
+    <path class="grid" d={globeGrid()} />
+  </g>
+) : (
+  <g>
+    <rect class="bounds" x={topLeft.x} y={topLeft.y} width={bottomRight.x - topLeft.x} height={bottomRight.y - topLeft.y} fill="#172633" />
+    {MAP_MERIDIANS.map((longitude) => <path class="grid" d={`M${mapPoint(0, longitude).x} ${topLeft.y}V${bottomRight.y}`} />)}
+    {MAP_LATITUDES.map((gridLatitude) => {
+      const { x, y } = mapPoint(gridLatitude, -90);
+      const label = gridLatitude === 0 ? '0°' : `${Math.abs(gridLatitude)}°${gridLatitude < 0 ? 'S' : 'N'}`;
+      return (
+        <g>
+          <path class="grid" d={`M${x} ${y}H${bottomRight.x}`} />
+          <text x={x - 7} y={y}>{label}</text>
+        </g>
+      );
+    })}
+  </g>
+)}
+
+<polyline data-route="shortest" points={shortest} />
+<polyline data-route="parallel" points={parallel} />
+<circle class="endpoint" data-endpoint="start" transform={`translate(${start})`} r="3.8" />
+<circle class="endpoint" data-endpoint="end" transform={`translate(${end})`} r="3.8" />
+
+<style>
+  .bounds,
+  .grid {
+    stroke: #658295;
+    stroke-width: 1;
+  }
+
+  .grid {
+    fill: none;
+    stroke-opacity: 0.58;
+  }
+
+  text {
+    fill: #aabac5;
+    font: 15px var(--mono);
+    text-anchor: end;
+    dominant-baseline: central;
+  }
+
+  [data-route] {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  [data-route="parallel"] {
+    stroke: #9bcee0;
+    stroke-width: 1.7;
+    stroke-dasharray: 4 5;
+  }
+
+  [data-route="shortest"] {
+    stroke: #ffd193;
+    stroke-width: 2.4;
+  }
+
+  .endpoint {
+    fill: #ffd193;
+    stroke: #172633;
+    stroke-width: 1;
+  }
+
+  @media (width <= 580px) {
+    text {
+      font-size: 17px;
+    }
+  }
+</style>
