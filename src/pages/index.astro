@@ -15,11 +15,11 @@ const entries = Object.entries(import.meta.glob<Entry>('./exhibits/*.md', { eage
   ...page,
   slug: path.split('/').at(-1)?.replace(/\.md$/, '') ?? '',
 }));
-const order = new Map(['kuramoto', 'lorenz', 'voronoi', 'fourier', 'logistic'].map((slug, index) => [slug, index]));
+const order = new Map(['kuramoto', 'lorenz', 'voronoi', 'fourier', 'logistic', 'galton'].map((slug, index) => [slug, index]));
 const exhibits = entries.sort((a, b) => (order.get(a.slug) ?? order.size) - (order.get(b.slug) ?? order.size));
 ---
 
-<Base description="An interactive archive of mathematical patterns. Explore synchrony, chaos, geometry, and waves one scene at a time.">
+<Base description="An interactive archive of mathematical patterns. Explore synchrony, chaos, geometry, waves, and probability one scene at a time.">
   <section id="exhibits" class="archive" aria-labelledby="archive-title">
     <h1 id="archive-title">The Pattern Archive</h1>
     <ul class="gallery">
@@ -93,6 +93,10 @@ const exhibits = entries.sort((a, b) => (order.get(a.slug) ?? order.size) - (ord
 
   .card[data-exhibit="logistic"] {
     --scene-glow: #203632;
+  }
+
+  .card[data-exhibit="galton"] {
+    --scene-glow: #303047;
   }
 
   .card:hover,

@@ -1,0 +1,78 @@
+---
+import Board from './Board.astro';
+import { DEFAULT_BIAS, MAX_BIAS, MIN_BIAS } from './model';
+import { percent } from './plot';
+---
+
+<section class="scene-panel" aria-label="Galton board experiment">
+  <div class="board">
+    <Board />
+  </div>
+  <ul class="scene-legend" aria-label="Plot legend">
+    <li><span aria-hidden="true"></span>Observed share</li>
+    <li><span class="prediction" aria-hidden="true"></span>Predicted share</li>
+  </ul>
+  <div class="scene-toolbar">
+    <div class="scene-controls">
+      <label for="galton-bias">Chance of turning right</label>
+      <div class="scene-range">
+        <input
+          id="galton-bias"
+          type="range"
+          min={MIN_BIAS * 100}
+          max={MAX_BIAS * 100}
+          value={DEFAULT_BIAS * 100}
+          aria-valuetext={percent(DEFAULT_BIAS)}
+        />
+        <output id="galton-bias-value" for="galton-bias" aria-live="off">{percent(DEFAULT_BIAS)}</output>
+      </div>
+    </div>
+    <div class="scene-actions">
+      <button type="button" id="galton-one">Drop one</button>
+      <button type="button" id="galton-batch">Drop 100</button>
+      <button type="button" id="galton-reset">Reset</button>
+    </div>
+    <p class="scene-readout">
+      <output id="galton-result">0 balls</output>
+    </p>
+  </div>
+</section>
+
+<script src="./experiment.ts"></script>
+
+<style>
+  .board {
+    background: var(--paper);
+    border-radius: 0.2rem;
+  }
+
+  .board :global(svg) {
+    max-width: 46rem;
+    margin-inline: auto;
+  }
+
+  .scene-legend {
+    gap: 0.6rem 1.4rem;
+    margin-top: 1rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+  }
+
+  .scene-legend .prediction {
+    border-top: 2px dashed var(--secondary);
+  }
+
+  .scene-toolbar {
+    row-gap: 0.85rem;
+    margin-top: 1.15rem;
+  }
+
+  .scene-controls {
+    flex-basis: 100%;
+    gap: 0.6rem 1rem;
+  }
+
+  .scene-readout {
+    min-width: 22ch;
+  }
+</style>

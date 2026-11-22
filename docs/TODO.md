@@ -23,6 +23,10 @@ The [project plan](PLAN.md) tracks the full exhibit roadmap.
 
 - [x] Build the Voronoi exhibit with movable sites and verify cell assignment by nearest-site distance.
 
+## Probability
+
+- [x] Build the Galton board with single and batch drops, adjustable bias, and tests for the fair binomial distribution and biased mean.
+
 ## Waves and signals
 
 - [x] Build Fourier drawing with adjustable term count, keyboard controls, and a test that the full set of terms reconstructs the sampled outline.

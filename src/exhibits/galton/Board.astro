@@ -1,0 +1,99 @@
+---
+import { binProbabilities, DEFAULT_BIAS, dropBall, ROW_COUNT } from './model';
+import { BAR_HEIGHT, BASELINE, boardDescription, HEIGHT, MIN_CHART_SHARE, peg, percent, routePoints, WIDTH } from './plot';
+
+interface Props {
+  preview?: boolean;
+}
+
+const { preview = false } = Astro.props;
+const expected = binProbabilities(DEFAULT_BIAS);
+const pegs = Array.from({ length: ROW_COUNT }, (_, row) =>
+  Array.from({ length: row + 1 }, (_, column) => peg(row, column)),
+).flat();
+const exampleDraws = [0.3, 0.22, 0.1, 0.9, 0.8, 0.2, 0.7, 0.29, 0.19, 0.67];
+let draw = 0;
+const example = preview ? dropBall(DEFAULT_BIAS, () => exampleDraws[draw++]) : [];
+const endpoint = peg(ROW_COUNT, preview ? example[ROW_COUNT] : 0);
+---
+
+<svg
+  class:list={{ 'scene-view': !preview }}
+  viewBox={preview ? '-44 0 648 370' : `0 0 ${WIDTH} ${HEIGHT}`}
+  aria-hidden={preview ? 'true' : undefined}
+  role={preview ? undefined : 'img'}
+  aria-label={preview ? undefined : 'Galton board and distribution of balls across eleven bins'}
+  aria-describedby={preview ? undefined : 'galton-distribution'}
+  focusable="false"
+>
+  {!preview && <desc id="galton-distribution">{boardDescription(expected, [])}</desc>}
+  <path
+    d={`M52 ${BASELINE - BAR_HEIGHT}H508M52 ${BASELINE - BAR_HEIGHT / 2}H508M52 ${BASELINE}H508`}
+    stroke="var(--line)"
+    fill="none"
+  />
+  {!preview && (
+    <g class="axis-labels" fill="var(--muted)" font-family="var(--mono)" font-size="16" text-anchor="end">
+      <text id="galton-scale" x="60" y={BASELINE - BAR_HEIGHT - 6}>{percent(MIN_CHART_SHARE)}</text>
+      <text x="50" y={BASELINE + 5}>0%</text>
+    </g>
+  )}
+  <polyline
+    id={preview ? undefined : 'galton-route'}
+    points={routePoints(example)}
+    fill="none"
+    stroke="var(--accent)"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  {pegs.map(({ x, y }) => <circle cx={x} cy={y} r="3.5" fill="var(--muted)" fill-opacity="0.65" />)}
+  <circle
+    id={preview ? undefined : 'galton-landing'}
+    cx={preview ? endpoint.x : 0}
+    cy={endpoint.y}
+    r={preview ? 5 : 0}
+    fill="var(--accent)"
+  />
+  {expected.map((share, bin) => {
+    const x = peg(ROW_COUNT, bin).x;
+    const prediction = (share / MIN_CHART_SHARE) * BAR_HEIGHT;
+    return (
+      <g>
+        <rect
+          data-galton-bar={preview ? undefined : bin}
+          x={x - 13}
+          y={preview ? BASELINE - prediction : BASELINE}
+          width="26"
+          height={preview ? prediction : 0}
+          fill={preview ? 'var(--secondary)' : 'var(--accent)'}
+          fill-opacity="0.76"
+          rx="1"
+        />
+        {!preview && (
+          <>
+            <line
+              data-galton-mark={bin}
+              x1={x - 16}
+              x2={x + 16}
+              y1={BASELINE - prediction}
+              y2={BASELINE - prediction}
+              stroke="var(--secondary)"
+              stroke-width="3"
+              stroke-dasharray="5 3"
+            />
+            <text class="axis-labels" x={x} y={BASELINE + 24} fill="var(--muted)" font-family="var(--mono)" font-size="16" text-anchor="middle">{bin}</text>
+          </>
+        )}
+      </g>
+    );
+  })}
+</svg>
+
+<style>
+  @media (width <= 500px) {
+    .axis-labels {
+      font-size: 23px;
+    }
+  }
+</style>

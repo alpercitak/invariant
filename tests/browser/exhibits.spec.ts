@@ -14,6 +14,7 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     'Voronoi diagrams',
     'Fourier drawing',
     'Logistic map',
+    'Galton board',
   ]) {
     const card = page.getByRole('link', { name, exact: true });
     await expect(card.locator('svg')).toBeVisible();
@@ -28,6 +29,42 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     await expect(guide.locator('p')).not.toBeEmpty();
     await page.getByRole('link', { name: 'All exhibits' }).click();
   }
+});
+
+test('Galton board tallies drops and clears the sample when the bias changes', async ({ page }) => {
+  await page.addInitScript(() => {
+    Math.random = () => 0.55;
+  });
+  await page.goto('/exhibits/galton/');
+  const slider = page.getByRole('slider', { name: 'Chance of turning right' });
+  const board = page.getByRole('img', { name: /^Galton board and distribution/ });
+  const result = page.locator('#galton-result');
+  const route = page.locator('#galton-route');
+  const centerMark = page.locator('[data-galton-mark="5"]');
+  const prediction = await centerMark.getAttribute('y1');
+  await expect(result).toHaveText('0 balls');
+
+  await page.getByRole('button', { name: 'Drop one' }).press('Enter');
+  await expect(result).toHaveText('1 ball · last bin 0');
+  await expect(route).toHaveAttribute('points', /^\d+,\d+ /);
+  await expect(page.locator('[data-galton-bar="0"]')).toHaveAttribute('height', '84');
+  await expect(board).toHaveAccessibleDescription(/Latest route: left, left, left/);
+  await page.getByRole('button', { name: 'Drop 100' }).press('Enter');
+  await expect(result).toContainText('101 balls');
+
+  await slider.press('End');
+  await expect(slider).toHaveAttribute('aria-valuetext', '80%');
+  await expect(result).toHaveText('0 balls');
+  await expect(route).toHaveAttribute('points', '');
+  expect(await centerMark.getAttribute('y1')).not.toBe(prediction);
+
+  await page.getByRole('button', { name: 'Drop 100' }).click();
+  await expect(result).toHaveText('100 balls · last bin 10');
+  await expect(board).toHaveAccessibleDescription(/Latest route: right, right, right/);
+  await page.getByRole('button', { name: 'Reset' }).click();
+  await expect(result).toHaveText('0 balls');
+  await expect(slider).toHaveValue('80');
+  await expect(page.locator('[data-galton-bar][height="0"]')).toHaveCount(11);
 });
 
 test('Logistic growth presets and keyboard input update both plots', async ({ page }) => {
