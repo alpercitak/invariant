@@ -1,0 +1,47 @@
+---
+import { DEFAULT_HARMONIC } from './model';
+import { HEIGHT, LEFT, MIDDLE, modeDescription, nodeMarks, RIGHT, wavePoints } from './plot';
+
+interface Props {
+  preview?: boolean;
+}
+
+const { preview = false } = Astro.props;
+const harmonic = preview ? 3 : DEFAULT_HARMONIC;
+---
+
+<svg
+  class:list={{ 'scene-view': !preview }}
+  viewBox={preview ? '0 -3 560 320' : `0 0 560 ${HEIGHT}`}
+  aria-hidden={preview ? 'true' : undefined}
+  role={preview ? undefined : 'img'}
+  aria-label={preview ? undefined : 'Standing wave on a string fixed at both ends'}
+  aria-describedby={preview ? undefined : 'standing-description'}
+  focusable="false"
+>
+  {!preview && <desc id="standing-description">{modeDescription(harmonic)}</desc>}
+  <path d={`M${LEFT} ${MIDDLE}H${RIGHT}`} stroke="var(--line)" stroke-dasharray="3 5" fill="none" vector-effect="non-scaling-stroke" />
+  <path d={`M${LEFT} ${MIDDLE - 15}v30M${RIGHT} ${MIDDLE - 15}v30`} stroke="var(--muted)" stroke-opacity="0.65" stroke-width="2" vector-effect="non-scaling-stroke" />
+  <g fill="none" stroke="var(--secondary)" stroke-opacity="0.55" stroke-dasharray="5 4" stroke-width="1.25">
+    <polyline id={preview ? undefined : 'standing-upper'} points={wavePoints(harmonic, Math.abs)} vector-effect="non-scaling-stroke" />
+    <polyline id={preview ? undefined : 'standing-lower'} points={wavePoints(harmonic, (value) => -Math.abs(value))} vector-effect="non-scaling-stroke" />
+  </g>
+  <polyline
+    id={preview ? undefined : 'standing-string'}
+    points={wavePoints(harmonic, (value) => value)}
+    stroke="var(--accent)"
+    stroke-width="2.6"
+    stroke-linejoin="round"
+    stroke-linecap="round"
+    fill="none"
+    vector-effect="non-scaling-stroke"
+  />
+  <path
+    id={preview ? undefined : 'standing-nodes'}
+    d={nodeMarks(harmonic)}
+    stroke="var(--secondary)"
+    stroke-width="7"
+    stroke-linecap="round"
+    vector-effect="non-scaling-stroke"
+  />
+</svg>

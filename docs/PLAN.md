@@ -21,7 +21,8 @@ The homepage opens on a gallery of titled scenes. Each exhibit supplies a model-
 3. Add Voronoi diagrams to extend the archive from simulations to interactive geometry, then add Fourier drawing to introduce waves and signals.
 4. Add the logistic map with a branching diagram linked to a single population trace.
 5. Open the probability collection with a Galton board that compares observed and predicted bin shares.
-6. Open the fractal collection with the Mandelbrot set. Use close-ups and a step limit to show how the rendered boundary depends on sampling. Add the remaining exhibits individually as their experiments, explanations, and math checks are ready.
+6. Open the fractal collection with the Mandelbrot set. Use close-ups and a step limit to show how the rendered boundary depends on sampling.
+7. Add standing waves with a fixed string, adjustable harmonics, and visible nodes. Add the remaining exhibits individually as their experiments, explanations, and math checks are ready.
 
 Each exhibit should be checked against a known result, an invariant, or an appropriate numerical or statistical reference. For example, check that uncoupled Kuramoto oscillators follow their natural frequencies and that the Lorenz solver agrees over a short interval when the time step is reduced.
 

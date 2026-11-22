@@ -16,12 +16,13 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     'Logistic map',
     'Galton board',
     'Mandelbrot set',
+    'Standing waves',
   ]) {
     const card = page.getByRole('link', { name, exact: true });
     await expect(card.locator('svg')).toBeVisible();
     await card.click();
     await expect(page.getByRole('heading', { name, level: 1 })).toBeVisible();
-    await expect(page.locator('math[display="block"]')).toBeVisible();
+    await expect(page.locator('math[display="block"]').first()).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(360);
     const guide = page.locator('details').filter({ hasText: 'How to read this' });
     await expect(guide.locator('p')).toBeHidden();
@@ -30,6 +31,39 @@ test('archive links to all exhibits and layouts fit a mobile screen', async ({ p
     await expect(guide.locator('p')).not.toBeEmpty();
     await page.getByRole('link', { name: 'All exhibits' }).click();
   }
+});
+
+test('Standing waves keep nodes fixed while the string plays and pauses', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/exhibits/standing-waves/');
+  const slider = page.getByRole('slider', { name: 'Harmonic' });
+  const play = page.getByRole('button', { name: 'Play' });
+  const wave = page.locator('#standing-string');
+  const nodes = page.locator('#standing-nodes');
+  const result = page.locator('#standing-result');
+  const plot = page.getByRole('img', { name: 'Standing wave on a string fixed at both ends' });
+  await expect(play).toBeVisible();
+  await expect(result).toHaveText('3 nodes including the ends · 100 Hz');
+
+  await slider.press('End');
+  await expect(result).toHaveText('7 nodes including the ends · 300 Hz');
+  await expect(plot).toHaveAccessibleDescription(/^Harmonic 6\./);
+  const peak = await wave.getAttribute('points');
+  const stationary = await nodes.getAttribute('d');
+
+  await play.press('Enter');
+  await expect.poll(() => wave.getAttribute('points')).not.toBe(peak);
+  await page.getByRole('button', { name: 'Pause' }).press('Enter');
+  const paused = await wave.getAttribute('points');
+  await page.evaluate(
+    () => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))),
+  );
+  expect(await wave.getAttribute('points')).toBe(paused);
+  expect(await nodes.getAttribute('d')).toBe(stationary);
+
+  await slider.press('Home');
+  await expect(result).toHaveText('2 nodes including the ends · 50 Hz');
+  expect(await nodes.getAttribute('d')).not.toBe(stationary);
 });
 
 test('Mandelbrot presets and step limit change the map and the center escape result', async ({ page }) => {
