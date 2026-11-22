@@ -1,4 +1,5 @@
 ---
+
 layout: ../../layouts/Exhibit.astro
 title: Mandelbrot set
 description: Zoom into the Mandelbrot set and see how a repeated calculation draws a fractal boundary.

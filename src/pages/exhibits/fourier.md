@@ -1,4 +1,5 @@
 ---
+
 layout: ../../layouts/Exhibit.astro
 title: Fourier drawing
 description: Add rotating circles and watch their combined motion trace a paper plane.

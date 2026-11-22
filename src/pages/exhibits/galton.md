@@ -1,4 +1,5 @@
 ---
+
 layout: ../../layouts/Exhibit.astro
 title: Galton board
 description: Drop balls through a triangular grid of pegs and compare where they land with the binomial distribution.

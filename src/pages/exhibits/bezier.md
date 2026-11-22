@@ -1,4 +1,5 @@
 ---
+
 layout: ../../layouts/Exhibit.astro
 title: Bézier curves
 description: Move four control points and see how repeated linear interpolation draws a cubic Bézier curve.

@@ -1,4 +1,5 @@
 ---
+
 layout: ../../layouts/Exhibit.astro
 title: Monte Carlo π
 description: Scatter random points in a square and see how the fraction inside a circular arc estimates π.

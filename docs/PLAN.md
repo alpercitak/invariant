@@ -35,12 +35,12 @@ Each exhibit should be checked against a known result, an invariant, or an appro
 
 ## Exhibit roadmap
 
-| Area | Exhibits |
-| --- | --- |
-| Dynamics | Kuramoto synchronization, Lorenz attractor, logistic map, two-body orbits |
-| Waves and signals | Fourier drawing, standing waves, wave interference, Doppler effect |
-| Probability | Galton board, Monte Carlo estimation of π, Bayes' theorem, birthday paradox |
-| Geometry | Voronoi diagrams, great circles, Bézier curves, Pythagorean dissection |
+| Area                   | Exhibits                                                                                  |
+| ---------------------- | ----------------------------------------------------------------------------------------- |
+| Dynamics               | Kuramoto synchronization, Lorenz attractor, logistic map, two-body orbits                 |
+| Waves and signals      | Fourier drawing, standing waves, wave interference, Doppler effect                        |
+| Probability            | Galton board, Monte Carlo estimation of π, Bayes' theorem, birthday paradox               |
+| Geometry               | Voronoi diagrams, great circles, Bézier curves, Pythagorean dissection                    |
 | Emergence and fractals | Mandelbrot set, Sierpiński triangle, Conway's Game of Life, Gray–Scott reaction–diffusion |
 
 See [TODO.md](TODO.md) for the work in scope for the first release and the next exhibit.
