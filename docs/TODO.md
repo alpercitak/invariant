@@ -15,6 +15,8 @@ The [project plan](PLAN.md) tracks the full exhibit roadmap.
 - [x] Put the visualization first on exhibit pages and add optional reading guidance.
 - [x] Configure GitHub Actions for project and Chromium checks and monthly Dependabot updates for Bun packages and actions.
 - [x] Upgrade to Astro 7 and pin its supported Node.js version for CI and Cloudflare Pages.
+- [x] Upgrade to TypeScript 6 and explicitly load Bun and Node.js types.
+- [ ] Remove the Dependabot TypeScript 7 restriction when [Astro supports it](https://github.com/withastro/roadmap/discussions/1321).
 - [ ] Deploy to Cloudflare Pages and verify the archive and exhibit URLs.
 
 ## Dynamics

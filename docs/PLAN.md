@@ -18,6 +18,8 @@ The homepage opens on a gallery of titled scenes. Each exhibit supplies a model-
 
 GitHub Actions runs the project checks and tests the static build in Chromium. CI and Cloudflare Pages use the Node.js version in `.node-version`. Dependabot opens monthly version updates for Bun packages and GitHub Actions.
 
+Keep TypeScript on 6.x while `astro check` depends on its compiler API.
+
 1. Set up the site and the exhibit template. Build Kuramoto synchronization first so the archive has one complete example with working controls, a readable explanation, and model tests.
 2. Add the Lorenz attractor and launch with both exhibits. Check reproducible reset, keyboard controls, paused and reduced-motion states, and a mobile layout before publishing.
 3. Add Voronoi diagrams to extend the archive from simulations to interactive geometry, then add Fourier drawing to introduce waves and signals.
