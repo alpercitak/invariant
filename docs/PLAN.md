@@ -16,7 +16,7 @@ Use Astro to build a static archive index and individual exhibit pages with a sh
 
 The homepage opens on a gallery of titled scenes. Each exhibit supplies a model-generated preview beside its interactive implementation. The exhibit page puts the scene and controls first, with a short optional guide and the detailed notes below.
 
-GitHub Actions runs the project checks and tests the static build in Chromium. Dependabot opens monthly version updates for Bun packages and GitHub Actions.
+GitHub Actions runs the project checks and tests the static build in Chromium. CI and Cloudflare Pages use the Node.js version in `.node-version`. Dependabot opens monthly version updates for Bun packages and GitHub Actions.
 
 1. Set up the site and the exhibit template. Build Kuramoto synchronization first so the archive has one complete example with working controls, a readable explanation, and model tests.
 2. Add the Lorenz attractor and launch with both exhibits. Check reproducible reset, keyboard controls, paused and reduced-motion states, and a mobile layout before publishing.

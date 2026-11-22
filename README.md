@@ -18,7 +18,7 @@ Invariant is an interactive archive of mathematical patterns. Pick a scene from 
 
 ## Run locally
 
-Install Bun and Node.js 22.12 or newer. Then run the following from the repo root.
+Install Bun and the Node.js version in `.node-version`. Then run the following from the repo root.
 
 ```sh
 bun install
@@ -40,7 +40,7 @@ GitHub Actions runs the project checks and Chromium tests on pull requests and p
 
 ## Deploy to Cloudflare Pages
 
-Use `main` as the production branch, `bun run build` as the build command, and `dist` as the build output directory. Set `NODE_VERSION` to `22.16.0` and `BUN_VERSION` to `1.4.2` for the same toolchain used locally. [Cloudflare Pages Astro guide](https://developers.cloudflare.com/pages/framework-guides/deploy-an-astro-site/)
+Use `main` as the production branch, `bun run build` as the build command, and `dist` as the build output directory. Cloudflare Pages reads `.node-version`. If you set a `NODE_VERSION` override, match that file. Set `BUN_VERSION` to `1.4.2`. [Cloudflare Pages Astro guide](https://developers.cloudflare.com/pages/framework-guides/deploy-an-astro-site/)
 
 ## Project notes
 
